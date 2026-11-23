@@ -5,7 +5,7 @@
   "private": true,
   "description": "DEVASTANTE · Pizza e smash — Cesano Boscone. Sito a capitoli (Astro + GSAP).",
   "engines": {
-    "node": ">=22.23.4"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "astro dev",
