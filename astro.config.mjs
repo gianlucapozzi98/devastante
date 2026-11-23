@@ -4,10 +4,17 @@ import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import keystatic from '@keystatic/astro';
 import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 
-// Dominio definitivo da confermare con il cliente: impostare SITE_URL in produzione.
-// ".example" è un dominio riservato (RFC 2606): segnaposto evidente.
-const site = process.env.SITE_URL ?? 'https://devastante.example';
+// Su Vercel (variabile VERCEL impostata dalla piattaforma) si usa l'adattatore Vercel;
+// in locale e su un server proprio l'adattatore Node.
+const suVercel = !!process.env.VERCEL;
+
+// Dominio: SITE_URL se impostato; su Vercel l'indirizzo di produzione del progetto;
+// altrimenti ".example", dominio riservato (RFC 2606) come segnaposto evidente.
+const site =
+  process.env.SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'https://devastante.example');
 
 export default defineConfig({
   site,
@@ -17,7 +24,7 @@ export default defineConfig({
   build: { format: 'file', inlineStylesheets: 'always' },
   // Pagine statiche; solo /keystatic, /api/keystatic e /api/iscrizione sono su richiesta.
   output: 'static',
-  adapter: node({ mode: 'standalone' }),
+  adapter: suVercel ? vercel() : node({ mode: 'standalone' }),
   integrations: [
     sitemap({
       filter: (page) => !/\/(keystatic|api)\b/.test(page) && !page.endsWith('/404'),

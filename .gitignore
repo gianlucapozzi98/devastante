@@ -15,3 +15,6 @@ docs/screenshot/
 # materiale riservato del cliente: il repository è pubblico
 DIREZIONE-ARTISTICA-DEVASTANTE.md
 DEVASTANTE LOGO PROP 2.pdf
+
+# output di build per Vercel
+.vercel/

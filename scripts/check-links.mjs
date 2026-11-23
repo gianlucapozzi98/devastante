@@ -2,8 +2,9 @@
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const root = 'dist/client';
-const pagine = readdirSync(root).filter((f) => f.endsWith('.html'));
+const root = process.argv[2] ?? 'dist/client';
+// pagine come "menu.html" (Node) o "menu/index.html" (Vercel)
+const pagine = readdirSync(root, { recursive: true }).map(String).filter((f) => f.endsWith('.html') && !f.startsWith('_'));
 const ids = new Map();
 for (const p of pagine) {
   const html = readFileSync(join(root, p), 'utf8');
@@ -12,18 +13,20 @@ for (const p of pagine) {
 const risolvi = (href) => {
   const [percorso] = href.split('#');
   if (percorso === '' || percorso === '/') return 'index.html';
+  if (percorso.startsWith('/_astro/')) return existsSync(join(root, percorso)) ? percorso.slice(1) : null;
   const pulito = percorso.replace(/^\//, '');
   for (const c of [pulito, `${pulito}.html`, join(pulito, 'index.html')]) if (existsSync(join(root, c)) && statSync(join(root, c)).isFile()) return c;
   return null;
 };
 const dinamici = ['/keystatic', '/api/iscrizione'];
+const host = (readFileSync(join(root, 'index.html'), 'utf8').match(/rel="canonical" href="https?:\/\/([^/"]+)/) ?? [])[1];
 let errori = 0;
 const esterni = new Set();
 for (const p of pagine) {
   const html = readFileSync(join(root, p), 'utf8');
   for (const m of html.matchAll(/\s(?:href|src|action)="([^"]+)"/g)) {
     const href = m[1].replaceAll('&amp;', '&');
-    if (/^(https?:)?\/\//.test(href)) { if (!href.includes('devastante.example')) esterni.add(href); continue; }
+    if (/^(https?:)?\/\//.test(href)) { if (!host || !href.includes(host)) esterni.add(href); continue; }
     if (/^(mailto|tel|data|javascript):/.test(href)) continue;
     if (dinamici.some((d) => href.startsWith(d))) continue;
     if (href.startsWith('#')) {

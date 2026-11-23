@@ -87,7 +87,8 @@ Microinterazioni con le stesse curve e durate (`--ease-out`, `--ease-io`, 0,18 /
 
 ## 4. Pubblicazione
 
-- Adattatore: `@astrojs/node` (standalone). Le pagine sono statiche (`dist/client`); solo `/keystatic`, `/api/keystatic` e `/api/iscrizione` girano sul server. Se l'hosting è Netlify o Vercel basta cambiare adattatore.
+- **Vercel** (https://devastante.vercel.app): quando la build gira su Vercel si usa da solo l'adattatore `@astrojs/vercel` (pagine statiche + funzioni per `/api/iscrizione` e Keystatic). Il dominio di canonical e sitemap è quello di produzione del progetto, finché non si imposta `SITE_URL`. Variabili da impostare in *Project Settings → Environment Variables*: `FORM_WEBHOOK_URL`, `SITE_URL` (con il dominio definitivo) e quelle di Keystatic.
+- **Server proprio / locale**: adattatore `@astrojs/node` (standalone); le pagine statiche sono in `dist/client`, solo `/keystatic`, `/api/keystatic` e `/api/iscrizione` girano sul server.
 - Variabili: `SITE_URL` (dominio definitivo: oggi è il segnaposto `https://devastante.example`), `FORM_WEBHOOK_URL` (servizio che riceve le iscrizioni: CRM, n8n, Make, servizio email…). Senza webhook il modulo risponde **"Il modulo non è ancora attivo: la tua richiesta NON è stata inviata"**.
 - Reindirizzamenti da fare sull'hosting: `http → https` e una sola versione tra `www` e senza `www` (301). Esempio nginx:
 
