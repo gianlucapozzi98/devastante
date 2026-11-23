@@ -1,8 +1,8 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { traccia } from './tratto';
 
-gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * La pennellata di progresso. Ogni capitolo vale un tratto; "Il ricordo" vale zero: lì la linea si ferma.
@@ -22,7 +22,7 @@ export default function progresso(nav: HTMLElement) {
   const inizio = pesi.map((_, i) => pesi.slice(0, i).reduce((a, b) => a + b, 0) / totale);
   tacche.forEach((t, i) => t.parentElement!.style.setProperty('--y', `${inizio[i] * 100}%`));
   const len = path.getTotalLength();
-  gsap.set(path, { drawSVG: '0% 0%' });
+  traccia(path, 0);
 
   const aggiorna = () => {
     const y = window.scrollY + window.innerHeight * 0.5;
@@ -37,7 +37,7 @@ export default function progresso(nav: HTMLElement) {
     const dentro = idx >= 0 && fine.getBoundingClientRect().bottom > window.innerHeight * 0.4;
     document.documentElement.classList.toggle('storia-visibile', dentro);
     const f = idx < 0 ? 0 : Math.min(1, inizio[idx] + (pesi[idx] * p) / totale);
-    gsap.set(path, { drawSVG: `0% ${f * 100}%` });
+    traccia(path, f);
     const pt = path.getPointAtLength(len * f);
     const r = svg.getBoundingClientRect();
     const n = nav.getBoundingClientRect();

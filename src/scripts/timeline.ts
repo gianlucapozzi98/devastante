@@ -1,17 +1,18 @@
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { traccia } from './tratto';
 import { EASE, riduci } from './motion';
 import { suona } from './sound';
 
-gsap.registerPlugin(Draggable, DrawSVGPlugin);
+gsap.registerPlugin(Draggable);
 
 /** Linea del tempo interattiva (schema "tab" ARIA): tappe cliccabili, frecce da tastiera, rotella trascinabile. */
 export default function timeline(el: HTMLElement) {
   const tabs = Array.from(el.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
   const binario = el.querySelector<HTMLElement>('[data-binario]')!;
   const maniglia = el.querySelector<HTMLElement>('[data-maniglia]')!;
-  const fatto = el.querySelector('.linea__fatto');
+  const fatto = el.querySelector<SVGPathElement>('.linea__fatto');
+  const disegno = { f: 0 };
   const lama = maniglia.querySelector('.rotella__lama');
   const durata = riduci() ? 0 : 0.6;
   let attuale = 0;
@@ -31,7 +32,7 @@ export default function timeline(el: HTMLElement) {
     });
     if (focus) tabs[i].focus();
     const f = i / (tabs.length - 1);
-    gsap.to(fatto, { drawSVG: `0% ${f * 100}%`, duration: durata, ease: EASE.out });
+    gsap.to(disegno, { f, duration: durata, ease: EASE.out, onUpdate: () => traccia(fatto, disegno.f), onComplete: () => traccia(fatto, disegno.f) });
     gsap.to(maniglia, { x: posizione(i), duration: durata, ease: EASE.out });
     gsap.to(lama, { rotation: f * 720, duration: durata, ease: EASE.out });
     if (cambiato) suona('rotella', 0.4);
@@ -45,14 +46,15 @@ export default function timeline(el: HTMLElement) {
     });
   });
 
-  gsap.set(fatto, { drawSVG: '0% 0%' });
+  traccia(fatto, 0);
   const [drag] = Draggable.create(maniglia, {
     type: 'x',
     bounds: { minX: 0, maxX: binario.clientWidth },
     inertia: false,
     onDrag(this: Draggable) {
       const f = this.x / binario.clientWidth;
-      gsap.set(fatto, { drawSVG: `0% ${f * 100}%` });
+      disegno.f = f;
+      traccia(fatto, f);
       gsap.set(lama, { rotation: f * 720 });
     },
     onRelease(this: Draggable) {

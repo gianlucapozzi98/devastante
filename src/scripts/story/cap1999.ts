@@ -1,10 +1,10 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { traccia } from '../tratto';
 import { EASE, riduci } from '../motion';
 import { suona } from '../sound';
 
-gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * Capitolo 1 — il "wow": la rotella taglia la teglia e il trancio del 1999 si alza.
@@ -24,7 +24,7 @@ export default function cap1999(el: HTMLElement) {
   const tagli = Array.from(svg.querySelectorAll<SVGPathElement>('path'));
 
   mm.add('(min-width: 900px)', () => {
-    gsap.set(tagli, { drawSVG: '0% 0%' });
+    tagli.forEach((t) => traccia(t, 0));
     gsap.set(testo, { y: 50, opacity: 0 });
 
     // la rotella segue il tracciato del taglio (coordinate SVG → pixel della teglia)
@@ -45,7 +45,7 @@ export default function cap1999(el: HTMLElement) {
       tl.to(st, {
         p: 1, duration: durata, ease: 'none',
         onStart: () => suona('rotella', 0.5),
-        onUpdate: () => { gsap.set(path, { drawSVG: `0% ${st.p * 100}%` }); segui(path, st.p); },
+        onUpdate: () => { traccia(path, st.p); segui(path, st.p); },
       }, pos);
     };
 
@@ -54,6 +54,7 @@ export default function cap1999(el: HTMLElement) {
       scrollTrigger: { trigger: el, start: 'top top', end: '+=230%', scrub: 0.7, pin: el.querySelector('.cap-1999__pin'), anticipatePin: 1 },
     });
     tl.fromTo(fondo, { scale: 0.9, rotation: -1.5 }, { scale: 1, rotation: 0, duration: 0.6 }, 0)
+      .to(testo, { y: 0, opacity: 1, stagger: 0.1, duration: 0.6, ease: EASE.out }, 0.1)
       .to(rotella, { opacity: 1, duration: 0.1 }, 0.5);
     taglia(tl, tagli[0], 0.55, 1);
     taglia(tl, tagli[1], 1.6, 0.42);
@@ -63,7 +64,7 @@ export default function cap1999(el: HTMLElement) {
       .to(altri, { opacity: 0.32, filter: 'saturate(0.6)', duration: 0.5, stagger: 0.02 }, 3)
       .to(anno, { scale: 1.28, xPercent: 8, yPercent: 14, rotation: -5, boxShadow: '0 40px 60px -20px rgba(0,0,0,.45)', duration: 0.8, ease: EASE.out }, 3)
       .to(tagli, { opacity: 0.35, duration: 0.4 }, 3)
-      .to(testo, { y: 0, opacity: 1, stagger: 0.1, duration: 0.6, ease: EASE.out }, 3.25)
+
       .to({}, { duration: 0.6 });
   });
 
