@@ -21,7 +21,7 @@ import Base from '../layouts/Base.astro';
   .nf__teglia { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: min(420px, 90vw); padding: 12px; border-radius: 20px; background: var(--teglia); margin-bottom: 20px; }
   .nf__teglia span { aspect-ratio: 1; border-radius: 8px; background: var(--rosso); }
   .nf__teglia span:nth-child(2n) { background: var(--nero); }
-  .nf__teglia .nf__vuoto { background: transparent; box-shadow: inset 0 0 0 3px var(--carta); border-radius: 8px; background-image: repeating-linear-gradient(-45deg, transparent 0 8px, rgb(255 255 255 / 0.3) 8px 10px); }
+  .nf__teglia span.nf__vuoto { background: transparent; box-shadow: inset 0 0 0 3px var(--carta); border-radius: 8px; background-image: repeating-linear-gradient(-45deg, transparent 0 8px, rgb(255 255 255 / 0.3) 8px 10px); }
   .nf__linea { position: absolute; left: -20px; right: -20px; bottom: -28px; width: calc(100% + 40px); height: 30px; overflow: visible; }
   .nf__linea path { fill: none; stroke: var(--rosso); stroke-width: 6; stroke-linecap: round; vector-effect: non-scaling-stroke; }
   .nf__titolo { font-size: var(--fs-xxl); }
