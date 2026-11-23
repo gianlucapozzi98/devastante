@@ -1,0 +1,10 @@
+nome: Trancio da confermare
+categoria: pizze
+ordine: 1
+descrizione: 'Gusto, ingredienti e prezzo da confermare con il titolare.'
+ingredienti: []
+allergeni: []
+prezzo: ''
+unita: da-confermare
+foto: null
+confermato: false

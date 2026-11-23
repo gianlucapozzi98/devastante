@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/story/Hero.astro';
+import Cap1999 from '../components/story/Cap1999.astro';
+import CapTabisca from '../components/story/CapTabisca.astro';
+import Cap2016 from '../components/story/Cap2016.astro';
+import CapRicordo from '../components/story/CapRicordo.astro';
+import CapOggi from '../components/story/CapOggi.astro';
+import CapTeglia from '../components/story/CapTeglia.astro';
+import CapSmash from '../components/story/CapSmash.astro';
+import CapCasa from '../components/story/CapCasa.astro';
+import Progresso from '../components/ui/Progresso.astro';
+import { getCollection } from 'astro:content';
+
+const capitoli = (await getCollection('capitoli')).sort((a, b) => a.data.ordine - b.data.ordine).map((c) => c.data);
+const per = (ancora: string) => {
+  const c = capitoli.find((x) => x.ancora === ancora);
+  if (!c) throw new Error(`Capitolo mancante: ${ancora}`);
+  return c;
+};
+---
+<Base loader>
+  <Hero />
+  <Progresso capitoli={capitoli.map(({ ancora, etichetta, titolo }) => ({ ancora, etichetta, titolo }))} />
+  <Cap1999 cap={per('cap-1999')} />
+  <CapTabisca cap={per('cap-tabisca')} />
+  <Cap2016 cap={per('cap-2016')} />
+  <CapRicordo cap={per('cap-ricordo')} />
+  <CapOggi cap={per('cap-oggi')} />
+  <CapTeglia cap={per('cap-teglia')} />
+  <CapSmash cap={per('cap-smash')} />
+  <CapCasa cap={per('cap-casa')} />
+</Base>

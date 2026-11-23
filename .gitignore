@@ -1,0 +1,17 @@
+dist/
+.astro/
+node_modules/
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# strumenti locali
+.claude/
+
+# screenshot di verifica (rigenerabili, ~20 MB)
+docs/screenshot/
+
+# materiale riservato del cliente: il repository è pubblico
+DIREZIONE-ARTISTICA-DEVASTANTE.md
+DEVASTANTE LOGO PROP 2.pdf

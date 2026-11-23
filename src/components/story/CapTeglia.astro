@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Foto from '../ui/Foto.astro';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+// Le tre affermazioni vengono dal testo del capitolo (parole del titolare, da validare: vedi README).
+const frasi = cap.testo.split(/(?<=\.)\s+/).filter(Boolean);
+const parola = 'LIEVITA';
+---
+<section id={cap.ancora} class="cap cap-teglia" data-anim="cap-teglia" data-capitolo={cap.etichetta} data-tema="rosso" aria-labelledby={`${cap.ancora}-t`}>
+  <div class="cap-teglia__pin">
+    <div class="contenitore cap-teglia__in">
+      <div class="cap-teglia__testa">
+        <p class="occhiello">{cap.occhiello}</p>
+        <h2 id={`${cap.ancora}-t`} class="cap__titolo">{cap.titolo}</h2>
+      </div>
+      <p class="cap-teglia__parola display" aria-hidden="true">
+        {parola.split('').map((l, i) => <span style={`--i:${i}`}>{l}</span>)}
+      </p>
+      <div class="cap-teglia__orologio" aria-hidden="true">
+        <span class="cap-teglia__ore display" data-ore>0</span>
+        <span class="cap-teglia__unita">ore di lievitazione e maturazione</span>
+        <span class="cap-teglia__oltre display" data-oltre>più di due giorni</span>
+      </div>
+      <div class="cap-teglia__ritmo" aria-hidden="true">
+        <span>tempo</span><span>tempo</span><span>tempo</span><span>tempo</span><span>tempo</span>
+      </div>
+      <ul class="cap-teglia__frasi">
+        {frasi.map((f) => <li class="display">{f}</li>)}
+      </ul>
+    </div>
+  </div>
+  <div class="contenitore cap-teglia__foto" data-anim="rivela">
+    <Foto class="cap-teglia__f" nota="il lievito madre, macro" alt="Il lievito madre" sfondo="#c40511" inchiostro="#fff" sizes="(min-width: 900px) 40vw, 90vw" />
+    <Foto class="cap-teglia__f" nota="l'impasto steso nella teglia" alt="L'impasto steso nella teglia" sfondo="#c40511" inchiostro="#fff" sizes="(min-width: 900px) 40vw, 90vw" />
+  </div>
+</section>
+
+<style>
+  .cap-teglia { background: var(--rosso); color: var(--bianco); overflow: clip; padding-bottom: clamp(60px, 8vw, 120px); }
+  .cap-teglia .occhiello::before { background: var(--bianco); }
+  .cap-teglia :global(:focus-visible) { outline-color: var(--bianco); }
+  .cap-teglia__pin { min-height: 100svh; display: grid; align-items: center; padding-block: calc(var(--nav-h) + 20px) 40px; }
+  .cap-teglia__in { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'testa ritmo' 'parola parola' 'orologio frasi'; gap: clamp(16px, 3vw, 40px) clamp(24px, 5vw, 80px); align-items: end; }
+  .cap-teglia__testa { grid-area: testa; }
+  .cap-teglia__parola { grid-area: parola; margin: 0; display: flex; justify-content: space-between; font-size: clamp(4.5rem, 16vw, 17rem); line-height: 0.8; color: var(--carta); }
+  .cap-teglia__parola span { display: inline-block; transform-origin: 50% 100%; }
+  .cap-teglia__orologio { grid-area: orologio; display: grid; gap: 4px; }
+  .cap-teglia__ore { font-size: clamp(3rem, 7vw, 6.5rem); line-height: 0.85; font-variant-numeric: tabular-nums; }
+  .cap-teglia__unita { font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-xs); }
+  .cap-teglia__oltre { font-size: var(--fs-l); color: var(--nero); background: var(--carta); justify-self: start; padding: 0.2em 0.5em; border-radius: 8px; margin-top: 8px; }
+  .cap-teglia__ritmo { grid-area: ritmo; display: grid; justify-items: end; font-weight: 800; font-size: var(--fs-s); text-transform: uppercase; letter-spacing: 0.2em; line-height: 1.5; }
+  .cap-teglia__frasi { grid-area: frasi; list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-width: 30rem; }
+  .cap-teglia__frasi li { font-size: clamp(1.4rem, 1rem + 1.4vw, 2.3rem); line-height: 1; }
+  .cap-teglia__foto { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px, 2vw, 28px); margin-top: clamp(30px, 5vw, 60px); }
+  .cap-teglia__foto :global(.cap-teglia__f) { aspect-ratio: 4 / 3; }
+  .cap-teglia__foto :global(.foto--vuota) { background: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.25) 1px, transparent 1.4px) 0 0 / 10px 10px, #c40511; }
+  @media (max-width: 899px) {
+    .cap-teglia__in { grid-template-columns: 1fr; grid-template-areas: 'testa' 'parola' 'orologio' 'frasi' 'ritmo'; }
+    .cap-teglia__ritmo { justify-items: start; }
+    .cap-teglia__foto { grid-template-columns: 1fr; }
+  }
+</style>

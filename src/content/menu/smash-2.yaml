@@ -1,0 +1,10 @@
+nome: Smash burger da confermare
+categoria: smash
+ordine: 2
+descrizione: 'Varianti, ingredienti, tipo e origine della carne da confermare.'
+ingredienti: []
+allergeni: []
+prezzo: ''
+unita: da-confermare
+foto: null
+confermato: false

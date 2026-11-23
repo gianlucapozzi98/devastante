@@ -1,0 +1,12 @@
+{
+  "giorni": [
+    { "giorno": "Lunedì", "stato": "da-confermare", "fasce": "" },
+    { "giorno": "Martedì", "stato": "da-confermare", "fasce": "" },
+    { "giorno": "Mercoledì", "stato": "da-confermare", "fasce": "" },
+    { "giorno": "Giovedì", "stato": "da-confermare", "fasce": "" },
+    { "giorno": "Venerdì", "stato": "da-confermare", "fasce": "" },
+    { "giorno": "Sabato", "stato": "da-confermare", "fasce": "" },
+    { "giorno": "Domenica", "stato": "da-confermare", "fasce": "" }
+  ],
+  "nota": ""
+}

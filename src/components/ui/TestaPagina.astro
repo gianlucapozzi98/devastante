@@ -1,0 +1,23 @@
+---
+/** Testata delle pagine interne: occhiello, titolo grande, pennellata che si disegna sotto. */
+interface Props { occhiello: string; titolo: string; id?: string; scuro?: boolean }
+const { occhiello, titolo, id = 'titolo-pagina', scuro = false } = Astro.props;
+---
+<header class:list={['testa', { 'su-scuro': scuro }]} data-anim="rivela">
+  <div class="contenitore">
+    <p class="occhiello" data-rivela>{occhiello}</p>
+    <h1 id={id} class="testa__titolo display" data-rivela>{titolo}</h1>
+    <svg class="testa__linea" viewBox="0 0 600 24" preserveAspectRatio="none" aria-hidden="true" data-rivela>
+      <path d="M4 14 C 80 6, 150 20, 230 12 S 380 4, 460 13 S 560 18, 596 10" />
+    </svg>
+    <div class="testa__extra"><slot /></div>
+  </div>
+</header>
+<style>
+  .testa { padding: calc(var(--nav-h) + clamp(40px, 7vw, 100px)) 0 clamp(30px, 5vw, 60px); }
+  .testa__titolo { font-size: var(--fs-xxl); margin: 16px 0 10px; text-wrap: balance; }
+  .testa__linea { width: min(420px, 70%); height: 22px; overflow: visible; }
+  .testa__linea path { fill: none; stroke: var(--rosso); stroke-width: 7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .testa__extra { margin-top: 18px; }
+  .testa__extra :global(p) { max-width: 60ch; }
+</style>

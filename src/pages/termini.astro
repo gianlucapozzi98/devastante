@@ -1,0 +1,26 @@
+---
+import Legale from '../layouts/Legale.astro';
+import DaConfermare from '../components/ui/DaConfermare.astro';
+import { azienda } from '../lib/site';
+---
+<Legale titolo="Termini e condizioni" descrizione="Termini di utilizzo del sito DEVASTANTE e condizioni di ordine e asporto.">
+  <h2>1. Chi siamo</h2>
+  <p>Il sito è gestito da {azienda.ragioneSociale || <DaConfermare>ragione sociale</DaConfermare>}, P.IVA {azienda.partitaIva || <DaConfermare>P.IVA</DaConfermare>}.</p>
+
+  <h2>2. Uso del sito</h2>
+  <p>Il sito presenta il locale, il menu e la sua storia. Testi, logo, foto e grafiche appartengono ai rispettivi titolari e non possono essere riutilizzati senza permesso.</p>
+  <p>Facciamo il possibile perché menu, prezzi e orari siano aggiornati; in caso di differenze valgono le informazioni date nel locale.</p>
+
+  <h2>3. Condizioni di ordine e asporto</h2>
+  <p><DaConfermare>testo fornito dal titolare: modalità di ordine, conferma, tempi, ritiro, pagamento, annullamento</DaConfermare></p>
+  <p>Questa sezione verrà pubblicata solo con i testi del titolare. Fino ad allora gli ordini non avvengono tramite il sito.</p>
+
+  <h2>4. Prezzi</h2>
+  <p>I prezzi indicati sono comprensivi di IVA. Per i prodotti venduti a peso è indicato il prezzo al chilogrammo.</p>
+
+  <h2>5. Allergeni</h2>
+  <p>Le informazioni sugli allergeni sono nella <a href="/allergeni">pagina dedicata</a>. In caso di allergie o intolleranze chiedi sempre al personale prima di ordinare.</p>
+
+  <h2>6. Legge applicabile</h2>
+  <p>Si applica la legge italiana. Restano ferme le tutele previste dal Codice del consumo per i consumatori.</p>
+</Legale>

@@ -1,0 +1,10 @@
+nome: Bevande da confermare
+categoria: bevande
+ordine: 1
+descrizione: 'Elenco delle bevande e prezzi da confermare.'
+ingredienti: []
+allergeni: []
+prezzo: ''
+unita: da-confermare
+foto: null
+confermato: false

@@ -1,0 +1,147 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Nav from '../components/ui/Nav.astro';
+import Footer from '../components/ui/Footer.astro';
+import CookieBanner from '../components/ui/CookieBanner.astro';
+import { SITE, impostazioni, azienda } from '../lib/site';
+import { percorsoPulito } from '../lib/percorso';
+
+interface Props {
+  titolo?: string;
+  descrizione?: string;
+  immagineOg?: string;
+  jsonLd?: Record<string, unknown>[];
+  loader?: boolean;
+  classe?: string;
+  noindex?: boolean;
+}
+const {
+  titolo = SITE.titoloDefault,
+  descrizione = SITE.descrizioneDefault,
+  immagineOg = '/og.png',
+  jsonLd = [],
+  loader = false,
+  classe = '',
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(percorsoPulito(Astro.url.pathname), Astro.site);
+const og = new URL(immagineOg, Astro.site);
+
+// Dati strutturati di base: solo dati certi (nome, città, cucina). Orari, telefono e indirizzo solo se confermati.
+const restaurant: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: SITE.nome,
+  url: Astro.site?.toString(),
+  logo: new URL('/brand/devastante-logo.svg', Astro.site).toString(),
+  image: og.toString(),
+  servesCuisine: ['Pizza', 'Hamburger'],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: impostazioni.citta || SITE.citta,
+    addressCountry: 'IT',
+    ...(impostazioni.indirizzo ? { streetAddress: impostazioni.indirizzo, postalCode: impostazioni.cap } : {}),
+  },
+  ...(impostazioni.telefono ? { telephone: impostazioni.telefono } : {}),
+  ...(azienda.ragioneSociale ? { legalName: azienda.ragioneSociale } : {}),
+  ...(azienda.partitaIva ? { vatID: azienda.partitaIva } : {}),
+};
+---
+<!doctype html>
+<html lang="it" class:list={['no-js', classe]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titolo}</title>
+    <meta name="description" content={descrizione} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#F6F1E7" />
+    <meta name="color-scheme" content="light" />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preload" href="/fonts/bagel-fat-one-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/figtree-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="DEVASTANTE" />
+    <meta property="og:title" content={titolo} />
+    <meta property="og:description" content={descrizione} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logo DEVASTANTE · Pizza e smash" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titolo} />
+    <meta name="twitter:description" content={descrizione} />
+    <meta name="twitter:image" content={og} />
+
+    <script type="application/ld+json" set:html={JSON.stringify([restaurant, ...jsonLd])} />
+
+    <!-- Stato iniziale prima del primo disegno: niente flash, il caricamento parte solo se serve -->
+    <script is:inline define:vars={{ loader }}>
+      (function () {
+        var d = document.documentElement;
+        d.classList.remove('no-js');
+        d.classList.add('js');
+        var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var visto = false;
+        try { visto = sessionStorage.getItem('dev-aperto') === '1'; } catch (e) {}
+        try {
+          var c = JSON.parse(localStorage.getItem('dev-consenso') || 'null');
+          if (!c || c.v !== 1 || Date.now() - c.data > 15724800000) d.classList.add('consenso-da-chiedere');
+        } catch (e) { d.classList.add('consenso-da-chiedere'); }
+        if (loader && !ridotto && !visto) {
+          d.classList.add('con-apertura');
+          // rete di sicurezza: il contenuto non resta mai coperto
+          setTimeout(function () { d.classList.remove('con-apertura'); }, 2600);
+        }
+      })();
+    </script>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="salta-al-contenuto" href="#contenuto">Vai al contenuto</a>
+    <Nav />
+    <main id="contenuto" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <CookieBanner />
+
+    <!-- Pennellata di transizione tra le pagine (decorativa) -->
+    <div class="transizione" aria-hidden="true" transition:persist="transizione">
+      <svg class="transizione__svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="transizione__forma" d="M -10 110 L -10 110 L -10 110 Z" fill="#E30613"></path>
+      </svg>
+    </div>
+    <div class="cursore" aria-hidden="true" transition:persist="cursore"><span class="cursore__palla"></span></div>
+    <div class="annuncio sr-only" aria-live="polite" transition:persist="annuncio"></div>
+
+    <script>
+      import '../scripts/app.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .transizione { position: fixed; inset: 0; z-index: 150; pointer-events: none; }
+  .transizione__svg { width: 100%; height: 100%; }
+  .cursore { position: fixed; left: 0; top: 0; z-index: 140; pointer-events: none; display: none; }
+  .cursore__palla {
+    position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--rosso); transform: scale(var(--s, 1)); opacity: var(--o, 0);
+    transition: transform var(--t-ui) var(--ease-out), opacity var(--t-micro), border-radius var(--t-ui) var(--ease-out);
+    mix-blend-mode: multiply;
+  }
+  html.cursore-attivo .cursore { display: block; }
+  main:focus { outline: none; }
+</style>

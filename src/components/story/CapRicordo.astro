@@ -1,0 +1,31 @@
+---
+/**
+ * Capitolo 4 — Il ricordo. Volutamente quasi fermo: una frase, silenzio visivo.
+ * Nessuna data, nessun effetto. Una foto compare solo se la famiglia l'ha data con il consenso.
+ */
+import type { CollectionEntry } from 'astro:content';
+import Foto from '../ui/Foto.astro';
+import { trovaFoto } from '../../lib/foto';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+const [prima, ...resto] = cap.testo.split(/(?<=\.)\s+/);
+const foto = cap.foto.find((f) => f.consenso && trovaFoto(f.src));
+---
+<section id={cap.ancora} class="cap cap-ricordo" data-anim="cap-ricordo" data-capitolo={cap.etichetta} aria-labelledby={`${cap.ancora}-t`}>
+  <div class="contenitore cap-ricordo__in">
+    <p class="occhiello cap-ricordo__occhiello">{cap.occhiello} · {cap.titolo}</p>
+    <h2 id={`${cap.ancora}-t`} class="cap-ricordo__frase">{prima}</h2>
+    {resto.length > 0 && <p class="cap-ricordo__seconda">{resto.join(' ')}</p>}
+    {foto && <Foto class="cap-ricordo__foto" src={foto.src} alt={foto.alt} nota="" didascalia={foto.didascalia} sizes="(min-width: 900px) 30vw, 70vw" />}
+  </div>
+</section>
+
+<style>
+  .cap-ricordo { background: var(--carta-2); min-height: 100svh; display: grid; place-items: center; padding-block: clamp(100px, 14vw, 200px); }
+  .cap-ricordo__in { display: grid; justify-items: center; text-align: center; gap: 28px; }
+  .cap-ricordo__occhiello { color: var(--cenere); }
+  .cap-ricordo__occhiello::before { background: var(--cenere); }
+  .cap-ricordo__frase { font-family: var(--f-display); font-size: clamp(2rem, 1.2rem + 3.4vw, 4.4rem); line-height: 1.02; max-width: 18ch; text-wrap: balance; }
+  .cap-ricordo__seconda { font-size: var(--fs-l); font-weight: 500; color: var(--cenere); margin: 0; }
+  .cap-ricordo :global(.cap-ricordo__foto) { width: min(360px, 70vw); aspect-ratio: 4 / 5; filter: grayscale(0.2); }
+</style>

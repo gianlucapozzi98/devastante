@@ -1,0 +1,69 @@
+---
+/**
+ * Iscrizione agli avvisi di apertura. Invio reale a /api/iscrizione (inoltro a FORM_WEBHOOK_URL).
+ * Se il servizio non è configurato il modulo lo dice e non finge mai l'invio.
+ * Consensi separati: avviso di apertura (necessario per questo servizio) e newsletter (facoltativa).
+ */
+interface Props { id?: string; titolo?: string }
+const { id = 'avvisi', titolo = 'Avvisami quando apre' } = Astro.props;
+---
+<form class="modulo" action="/api/iscrizione" method="post" data-anim="modulo" novalidate aria-labelledby={`${id}-titolo`}>
+  <h3 id={`${id}-titolo`} class="modulo__titolo display">{titolo}</h3>
+  <p class="modulo__intro">Ti scriviamo una sola email quando apriamo. Niente altro, se non lo chiedi tu.</p>
+  <div class="modulo__campi">
+    <div class="campo">
+      <label for={`${id}-nome`}>Nome <span class="campo__facoltativo">(facoltativo)</span></label>
+      <input id={`${id}-nome`} name="nome" type="text" autocomplete="given-name" maxlength="80" />
+    </div>
+    <div class="campo">
+      <label for={`${id}-email`}>Email <span aria-hidden="true">*</span></label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" required maxlength="160" aria-describedby={`${id}-email-err`} />
+      <p class="campo__errore" id={`${id}-email-err`} data-errore="email" hidden>Scrivi un indirizzo email valido, per esempio nome@esempio.it.</p>
+    </div>
+    <div class="campo campo--miele" aria-hidden="true">
+      <label for={`${id}-sito`}>Lascia vuoto questo campo</label>
+      <input id={`${id}-sito`} name="sito" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+  </div>
+  <div class="modulo__consensi">
+    <label class="spunta">
+      <input type="checkbox" name="consensoAvviso" value="si" required aria-describedby={`${id}-cons-err`} />
+      <span>Acconsento a ricevere un'email quando DEVASTANTE apre. Ho letto l'<a href="/privacy">informativa privacy</a>. <span aria-hidden="true">*</span></span>
+    </label>
+    <p class="campo__errore" id={`${id}-cons-err`} data-errore="consensoAvviso" hidden>Serve il tuo consenso per mandarti l'avviso.</p>
+    <label class="spunta">
+      <input type="checkbox" name="consensoNewsletter" value="si" />
+      <span>Facoltativo: voglio ricevere anche novità e offerte (newsletter). Posso cancellarmi quando voglio.</span>
+    </label>
+  </div>
+  <button class="btn" type="submit">
+    <span data-etichetta>Avvisami</span>
+  </button>
+  <p class="modulo__esito" data-esito role="status" aria-live="polite"></p>
+  <p class="modulo__nota">* campi obbligatori</p>
+</form>
+
+<style>
+  .modulo { display: grid; gap: 18px; background: var(--bianco); color: var(--nero); border-radius: 22px; padding: clamp(22px, 3vw, 36px); box-shadow: 0 0 0 2.5px var(--nero), 8px 8px 0 var(--rosso); max-width: 560px; }
+  .modulo__titolo { font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.6rem); }
+  .modulo__intro { margin: 0; }
+  .modulo__campi { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .campo { display: grid; gap: 6px; }
+  .campo label { font-weight: 800; font-size: var(--fs-s); }
+  .campo__facoltativo { font-weight: 500; color: var(--cenere); }
+  .campo input { font: inherit; padding: 0.8em 0.9em; border-radius: 12px; border: 2px solid var(--cenere); background: var(--carta); min-height: 48px; transition: border-color var(--t-micro), box-shadow var(--t-ui) var(--ease-out); }
+  .campo input:focus { outline: none; border-color: var(--nero); box-shadow: 0 0 0 4px rgb(227 6 19 / 0.25); }
+  .campo input[aria-invalid='true'] { border-color: var(--rosso); }
+  .campo__errore { margin: 0; color: #b0000e; font-weight: 700; font-size: var(--fs-s); }
+  .campo--miele { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .modulo__consensi { display: grid; gap: 10px; }
+  .spunta { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; font-size: var(--fs-s); line-height: 1.45; cursor: pointer; }
+  .spunta input { width: 24px; height: 24px; margin: 0; accent-color: var(--rosso); }
+  .modulo .btn { justify-self: start; }
+  .modulo .btn[aria-busy='true'] { opacity: 0.7; pointer-events: none; }
+  .modulo__esito { margin: 0; font-weight: 700; min-height: 1.4em; }
+  .modulo__esito[data-tipo='ok'] { color: #0a6b2c; }
+  .modulo__esito[data-tipo='errore'] { color: #b0000e; }
+  .modulo__nota { margin: 0; font-size: var(--fs-xs); color: var(--cenere); }
+  @media (max-width: 560px) { .modulo__campi { grid-template-columns: 1fr; } }
+</style>

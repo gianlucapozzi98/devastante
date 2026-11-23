@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import TestaPagina from '../components/ui/TestaPagina.astro';
+import Foto from '../components/ui/Foto.astro';
+import Rotella from '../components/brand/Rotella.astro';
+import { getCollection } from 'astro:content';
+const tutti = (await getCollection('capitoli')).map((c) => c.data).sort((a, b) => a.ordine - b.ordine);
+const tappe = tutti.filter((c) => ['cap-1999', 'cap-tabisca', 'cap-2016', 'cap-ricordo', 'cap-oggi'].includes(c.ancora));
+const scatti: Record<string, string[]> = {
+  'cap-1999': ["foto d'epoca: la teglia del 1999 (dalla famiglia)", 'foto di famiglia, solo con il consenso'],
+  'cap-tabisca': ["foto d'epoca: il locale grande", "foto d'epoca: il banco"],
+  'cap-2016': ['la pizza tonda di TABISCA', "l'impasto della tonda"],
+  'cap-ricordo': [],
+  'cap-oggi': ['le due vetrine, da fuori', 'il banco di oggi'],
+};
+---
+<Base titolo="La storia | DEVASTANTE · dal 1999 la teglia di famiglia" descrizione="Dal 1999 la pizza in teglia di TABISCA a Cesano Boscone, il passaggio del 2016, il ricordo dei nonni e il nuovo localino con due vetrine.">
+  <TestaPagina occhiello="La storia" titolo="Dalla teglia dei nonni a oggi">
+    <p>La versione lunga del racconto. Date e nomi vengono dal racconto del titolare; nomi e foto della famiglia compaiono solo con il suo consenso.</p>
+  </TestaPagina>
+
+  <section class="contenitore linea" data-anim="timeline" aria-label="Linea del tempo">
+    <div class="linea__binario" data-binario>
+      <svg class="linea__svg" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true">
+        <path class="linea__base" d="M0 20 C 120 8, 240 32, 360 20 S 600 8, 720 20 S 900 32, 1000 20" />
+        <path class="linea__fatto" d="M0 20 C 120 8, 240 32, 360 20 S 600 8, 720 20 S 900 32, 1000 20" />
+      </svg>
+      <div class="linea__maniglia" data-maniglia aria-hidden="true"><Rotella /></div>
+      <div class="linea__tappe" role="tablist" aria-label="Tappe della storia">
+        {tappe.map((t, i) => (
+          <button type="button" role="tab" id={`tab-${t.ancora}`} aria-controls={`pannello-${t.ancora}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} class="tappa" style={`--x:${(i / (tappe.length - 1)) * 100}%`}>
+            <span class="tappa__punto" aria-hidden="true"></span>
+            <span class="tappa__etichetta">{t.etichetta}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <p class="linea__aiuto">Trascina la rotella, tocca una tappa o usa le frecce della tastiera.</p>
+
+    {tappe.map((t, i) => (
+      <div class="pannello" role="tabpanel" id={`pannello-${t.ancora}`} aria-labelledby={`tab-${t.ancora}`} hidden={i !== 0} tabindex="0">
+        <div class="pannello__testo">
+          <p class="occhiello">{t.occhiello}</p>
+          <h2 class="display pannello__titolo">{t.titolo}</h2>
+          <p class="lead">{t.testo}</p>
+          {t.ancora !== 'cap-ricordo' && <blockquote class="pannello__citazione"><p><span class="da-confermare">[Citazione del titolare, da raccogliere con il suo permesso]</span></p></blockquote>}
+        </div>
+        <div class="pannello__foto">
+          {(scatti[t.ancora] ?? []).map((n) => <Foto class="pannello__f" alt={n} nota={n} sizes="(min-width: 900px) 25vw, 50vw" />)}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="contenitore film" data-anim="rivela" aria-labelledby="film-t">
+    <h2 id="film-t" class="display film__titolo" data-rivela>Il film della storia</h2>
+    <Foto class="film__video" alt="Il film della storia di DEVASTANTE" nota="film di 60–90 secondi montato con foto vere della famiglia e del locale (in arrivo)" sizes="100vw" />
+    <p class="film__nota" data-rivela>Il film verrà montato solo con foto e video veri, forniti dalla famiglia.</p>
+  </section>
+
+  <section class="contenitore storia-fine" data-anim="rivela">
+    <p class="lead" data-rivela>La storia completa, capitolo per capitolo, è nella <a href="/#cap-1999">home</a>.</p>
+  </section>
+</Base>
+
+<style>
+  .linea { padding-bottom: clamp(60px, 8vw, 110px); }
+  .linea__binario { position: relative; height: 120px; margin: 20px 20px 0; touch-action: pan-y; }
+  .linea__svg { position: absolute; left: 0; right: 0; top: 30px; width: 100%; height: 40px; overflow: visible; }
+  .linea__base { fill: none; stroke: var(--teglia); stroke-width: 3; stroke-dasharray: 3 9; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .linea__fatto { fill: none; stroke: var(--rosso); stroke-width: 7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .linea__maniglia { position: absolute; top: 18px; left: 0; width: 64px; height: 64px; margin-left: -24px; cursor: grab; z-index: 2; touch-action: none; }
+  .linea__maniglia:active { cursor: grabbing; }
+  .linea__maniglia :global(svg) { width: 100%; height: 100%; }
+  .linea__tappe { position: absolute; inset: 0; }
+  .tappa { position: absolute; left: var(--x); top: 34px; transform: translateX(-50%); display: grid; justify-items: center; gap: 12px; border: 0; background: none; padding: 0; min-width: 48px; }
+  .tappa__punto { width: 20px; height: 20px; border-radius: 50%; background: var(--carta); box-shadow: inset 0 0 0 3px var(--nero); transition: transform var(--t-ui) var(--ease-out), background var(--t-micro); }
+  .tappa__etichetta { font-family: var(--f-display); font-size: clamp(1rem, 0.8rem + 1vw, 1.6rem); white-space: nowrap; margin-top: 26px; }
+  .tappa[aria-selected='true'] .tappa__punto { background: var(--rosso); box-shadow: inset 0 0 0 3px var(--rosso); transform: scale(1.4); }
+  .tappa[aria-selected='true'] .tappa__etichetta { color: var(--rosso); }
+  .tappa:hover .tappa__punto { transform: scale(1.3); }
+  .linea__aiuto { font-size: var(--fs-s); color: var(--cenere); margin: 10px 0 30px; }
+  .pannello { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 70px); align-items: start; }
+  .pannello[hidden] { display: none; }
+  .pannello__titolo { font-size: var(--fs-xl); margin: 14px 0 18px; }
+  .pannello__citazione { margin: 24px 0 0; padding-left: 18px; border-left: 5px solid var(--rosso); }
+  .pannello__foto { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pannello__foto :global(.pannello__f) { aspect-ratio: 4 / 5; }
+  .film { padding-bottom: clamp(60px, 8vw, 110px); display: grid; gap: 18px; }
+  .film__titolo { font-size: var(--fs-xl); }
+  .film :global(.film__video) { aspect-ratio: 16 / 9; }
+  .film__nota { color: var(--cenere); margin: 0; }
+  .storia-fine { padding-bottom: clamp(60px, 8vw, 110px); }
+  @media (max-width: 899px) {
+    .pannello { grid-template-columns: 1fr; }
+    .tappa__etichetta { font-size: 0.85rem; transform: rotate(-20deg); transform-origin: 50% 0; }
+  }
+</style>

@@ -1,0 +1,9 @@
+{
+  "strati": [
+    { "nome": "Pane", "descrizione": "Tipo di pane da confermare.", "confermato": false, "foto": null },
+    { "nome": "Salsa", "descrizione": "Da confermare con il menu.", "confermato": false, "foto": null },
+    { "nome": "Formaggio", "descrizione": "Da confermare con il menu.", "confermato": false, "foto": null },
+    { "nome": "Carne", "descrizione": "Schiacciata sulla piastra. Tipo e origine da confermare.", "confermato": true, "foto": null },
+    { "nome": "Pane", "descrizione": "La base.", "confermato": false, "foto": null }
+  ]
+}

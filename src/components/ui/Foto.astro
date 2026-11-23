@@ -1,0 +1,47 @@
+---
+/**
+ * Finestra foto. Con una foto vera del cliente: <picture> AVIF/WebP ottimizzata.
+ * Senza foto: segnaposto DICHIARATO ("Foto in arrivo" + lo scatto da fare). Mai cibo finto, mai stock per i prodotti.
+ */
+import { Picture } from 'astro:assets';
+import { trovaFoto } from '../../lib/foto';
+
+interface Props {
+  src?: string | null;
+  alt: string;
+  nota: string;
+  class?: string;
+  sizes?: string;
+  priorita?: boolean;
+  illustrativa?: boolean;
+  sfondo?: string;
+  inchiostro?: string;
+  didascalia?: string;
+}
+const { src, alt, nota, class: cls = '', sizes = '(min-width: 900px) 50vw, 100vw', priorita = false, illustrativa = false, sfondo, inchiostro, didascalia } = Astro.props;
+const img = trovaFoto(src);
+const stile = [sfondo && `--sfondo:${sfondo}`, inchiostro && `--inchiostro:${inchiostro}`].filter(Boolean).join(';');
+---
+{img ? (
+  <figure class:list={['foto', cls]} style={stile || undefined}>
+    <Picture
+      src={img}
+      alt={alt}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200, 1600].filter((w) => w <= img.width)}
+      sizes={sizes}
+      loading={priorita ? 'eager' : 'lazy'}
+      fetchpriority={priorita ? 'high' : 'auto'}
+      decoding="async"
+    />
+    {illustrativa && <span class="etichetta-illustrativa">Immagine illustrativa</span>}
+    {didascalia && <figcaption class="foto__didascalia">{didascalia}</figcaption>}
+  </figure>
+) : (
+  <div class:list={['foto', 'foto--vuota', cls]} style={stile || undefined} role="img" aria-label={`Foto in arrivo: ${alt}`}>
+    <span class="foto__nota">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.2h6.8L17 8h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.2" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+      <span>Foto in arrivo · {nota}</span>
+    </span>
+  </div>
+)}

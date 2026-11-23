@@ -1,0 +1,62 @@
+---
+/**
+ * Indicatore di progresso della storia: la rotella corre lungo il bordo e lascia la pennellata rossa.
+ * È anche l'indice dei capitoli (ancore). Durante "Il ricordo" la pennellata si ferma.
+ */
+import Rotella from '../brand/Rotella.astro';
+interface Props { capitoli: { ancora: string; etichetta: string; titolo: string }[] }
+const { capitoli } = Astro.props;
+---
+<nav class="progresso" data-anim="progresso" aria-label="Capitoli della storia">
+  <svg class="progresso__svg" viewBox="0 0 40 1000" preserveAspectRatio="none" aria-hidden="true">
+    <path class="progresso__binario" d="M20 0 C 30 80, 10 160, 20 250 S 30 420, 20 500 S 10 680, 20 750 S 30 920, 20 1000" />
+    <path class="progresso__pennellata" d="M20 0 C 30 80, 10 160, 20 250 S 30 420, 20 500 S 10 680, 20 750 S 30 920, 20 1000" />
+  </svg>
+  <Rotella class="progresso__rotella" />
+  <ol class="progresso__indice">
+    {capitoli.map((c, i) => (
+      <li style={`--i:${i}`}>
+        <a href={`#${c.ancora}`} data-tacca={c.ancora}>
+          <span class="progresso__punto" aria-hidden="true"></span>
+          <span class="progresso__etichetta">{c.etichetta}<span class="sr-only">: {c.titolo}</span></span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <div class="progresso__mobile" aria-hidden="true"><span></span></div>
+</nav>
+
+<style>
+  .progresso { position: fixed; right: clamp(10px, 1.6vw, 26px); top: 18vh; height: 64vh; width: 40px; z-index: 60; opacity: 0; visibility: hidden; transition: opacity var(--t-ui) var(--ease-out), visibility var(--t-ui); }
+  :global(html.storia-visibile) .progresso { opacity: 1; visibility: visible; }
+  .progresso__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .progresso__binario { fill: none; stroke: var(--teglia); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .progresso__pennellata { fill: none; stroke: var(--rosso); stroke-width: 6; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .progresso__rotella { position: absolute; left: 0; top: 0; width: 34px; height: 34px; pointer-events: none; }
+  .progresso__indice { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; }
+  .progresso__indice li { position: absolute; right: 0; top: var(--y, 0%); transform: translateY(-50%); }
+  .progresso__indice a { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-width: 44px; min-height: 28px; text-decoration: none; }
+  .progresso__punto { width: 10px; height: 10px; border-radius: 50%; background: var(--carta); box-shadow: inset 0 0 0 2px var(--nero); margin-right: 15px; transition: transform var(--t-ui) var(--ease-out), background var(--t-micro); }
+  .progresso__etichetta {
+    order: -1; font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.06em; white-space: nowrap; background: var(--nero); color: var(--carta);
+    padding: 0.35em 0.7em; border-radius: 999px; opacity: 0; transform: translateX(8px); transition: opacity var(--t-micro), transform var(--t-ui) var(--ease-out); pointer-events: none;
+  }
+  .progresso__indice a:hover .progresso__etichetta, .progresso__indice a:focus-visible .progresso__etichetta { opacity: 1; transform: none; }
+  .progresso__indice a[aria-current='step'] .progresso__etichetta { background: var(--rosso); color: var(--bianco); }
+  .progresso__indice a.fatto .progresso__punto { background: var(--rosso); box-shadow: inset 0 0 0 2px var(--rosso); }
+  .progresso__indice a[aria-current='step'] .progresso__punto { transform: scale(1.5); }
+  .progresso[data-tema='scuro'] .progresso__binario { stroke: #8a8884; }
+  .progresso[data-tema='scuro'] .progresso__punto { background: var(--nero); box-shadow: inset 0 0 0 2px var(--carta); }
+  .progresso[data-tema='rosso'] .progresso__pennellata { stroke: var(--carta); }
+  .progresso[data-tema='rosso'] .progresso__binario { stroke: rgb(255 255 255 / 0.5); }
+  .progresso[data-tema='rosso'] .progresso__punto { background: var(--rosso); box-shadow: inset 0 0 0 2px var(--carta); }
+  .progresso[data-tema='rosso'] .progresso__indice a.fatto .progresso__punto { background: var(--carta); }
+  .progresso__mobile { display: none; }
+  @media (max-width: 899px) {
+    .progresso { top: var(--nav-h); left: 0; right: 0; width: auto; height: 4px; }
+    .progresso__svg, .progresso__rotella, .progresso__indice { display: none; }
+    .progresso__mobile { display: block; position: absolute; inset: 0; background: rgb(0 0 0 / 0.08); }
+    .progresso__mobile span { display: block; height: 100%; background: var(--rosso); transform-origin: left; transform: scaleX(var(--p, 0)); }
+  }
+  @media (max-height: 520px) and (min-width: 900px) { .progresso__etichetta { display: none; } }
+</style>

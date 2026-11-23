@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Foto from '../ui/Foto.astro';
+import Rotella from '../brand/Rotella.astro';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+// Le parole del titolare ("passione, mani e cuore") diventano tranci della teglia.
+---
+<section id={cap.ancora} class="cap cap-1999" data-anim="cap-1999" data-capitolo={cap.etichetta} aria-labelledby={`${cap.ancora}-t`}>
+  <div class="cap-1999__pin">
+    <div class="cap-1999__scena">
+      <div class="teglia" data-teglia>
+        <div class="teglia__fondo">
+          <div class="teglia__griglia">
+            <div class="trancio trancio--anno" data-trancio-anno>
+              <span class="trancio__anno display">{cap.etichetta}</span>
+              <span class="trancio__luogo">Cesano Boscone</span>
+            </div>
+            <Foto class="trancio" nota="la teglia appena sfornata, dall'alto" alt="Una teglia di pizza appena sfornata" />
+            <div class="trancio trancio--parola trancio--nero"><span class="display">passione</span></div>
+            <Foto class="trancio" nota="foto d'epoca di TABISCA, solo se la dà la famiglia" alt="TABISCA negli anni del trancio" sfondo="#e4dccb" />
+            <Foto class="trancio" nota="il taglio con la rotella, macro" alt="La rotella che taglia un trancio" sfondo="#e4dccb" />
+            <div class="trancio trancio--parola trancio--carta"><span class="display">mani</span></div>
+            <Foto class="trancio" nota="il bordo croccante di un trancio, macro" alt="Il bordo di un trancio" />
+            <div class="trancio trancio--parola trancio--rosso"><span class="display">cuore</span></div>
+          </div>
+          <svg class="teglia__tagli" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+            <path class="taglio-o" d="M0 100 C 60 97, 120 103, 200 99 S 340 102, 400 100" />
+            <path class="taglio-v" d="M100 0 C 98 50, 102 150, 100 200" />
+            <path class="taglio-v" d="M200 0 C 202 50, 198 150, 200 200" />
+            <path class="taglio-v" d="M300 0 C 298 50, 302 150, 300 200" />
+          </svg>
+        </div>
+        <Rotella class="teglia__rotella" />
+      </div>
+    </div>
+
+    <div class="cap-1999__testo">
+      <p class="occhiello">{cap.occhiello}</p>
+      <h2 id={`${cap.ancora}-t`} class="cap__titolo display">
+        <span class="sr-only">{cap.etichetta} — </span>{cap.titolo}
+      </h2>
+      <p class="lead">{cap.testo}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cap-1999 { position: relative; margin-top: -9vh; }
+  .cap-1999__pin { min-height: 100svh; display: grid; grid-template-columns: 1.25fr 0.75fr; align-items: center; gap: clamp(24px, 4vw, 64px); padding: calc(var(--nav-h) + 12px) var(--gutter) 40px; }
+  .cap-1999__scena { position: relative; }
+  .teglia { position: relative; }
+  .teglia__fondo {
+    position: relative; padding: clamp(10px, 1.3vw, 18px); border-radius: 26px;
+    background: linear-gradient(160deg, #b7b5b1 0%, #9c9a96 35%, #8a8884 70%, #a9a7a3 100%);
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.35), inset 0 -10px 24px rgb(0 0 0 / 0.18), 0 30px 60px -20px rgb(0 0 0 / 0.35);
+  }
+  .teglia__griglia { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 0; border-radius: 14px; aspect-ratio: 2 / 1; background: var(--carta-2); }
+  .teglia__griglia > :global(*) { border-radius: 0; min-height: 0; }
+  .teglia__griglia > :global(:nth-child(1)) { border-top-left-radius: 14px; }
+  .teglia__griglia > :global(:nth-child(4)) { border-top-right-radius: 14px; }
+  .teglia__griglia > :global(:nth-child(5)) { border-bottom-left-radius: 14px; }
+  .teglia__griglia > :global(:nth-child(8)) { border-bottom-right-radius: 14px; }
+  .trancio { position: relative; display: grid; place-items: center; overflow: hidden; }
+  :global(.trancio.foto--vuota) { place-items: end start; }
+  :global(.trancio .foto__nota) { font-size: 0.6875rem; }
+  .trancio--anno { background: var(--rosso); color: var(--bianco); align-content: center; justify-items: center; gap: 4px; z-index: 2; box-shadow: 0 0 0 rgb(0 0 0 / 0); }
+  .trancio__anno { font-size: clamp(2.6rem, 6vw, 6.5rem); line-height: 0.85; }
+  .trancio__luogo { font-weight: 800; font-size: var(--fs-xs); letter-spacing: 0.14em; text-transform: uppercase; }
+  .trancio--parola .display { font-size: clamp(1.6rem, 3.2vw, 3.4rem); }
+  .trancio--nero { background: var(--nero); color: var(--carta); }
+  .trancio--carta { background: var(--carta); color: var(--nero); }
+  .trancio--rosso { background: var(--rosso); color: var(--bianco); }
+  .teglia__tagli { position: absolute; inset: clamp(10px, 1.3vw, 18px); width: calc(100% - 2 * clamp(10px, 1.3vw, 18px)); height: calc(100% - 2 * clamp(10px, 1.3vw, 18px)); pointer-events: none; overflow: visible; }
+  .teglia__tagli path { fill: none; stroke: var(--rosso); stroke-width: 5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .teglia__rotella { position: absolute; left: 0; top: 0; width: clamp(54px, 6vw, 84px); height: auto; pointer-events: none; opacity: 0; z-index: 3; filter: drop-shadow(0 6px 8px rgb(0 0 0 / 0.25)); }
+  .cap__titolo { font-size: var(--fs-xxl); margin: 18px 0 22px; }
+  .cap-1999__testo .lead { max-width: 30ch; }
+
+  @media (max-width: 899px) {
+    .cap-1999 { margin-top: 0; }
+    .cap-1999__pin { grid-template-columns: 1fr; align-content: center; gap: 28px; }
+    .teglia__griglia { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); aspect-ratio: 3 / 4; }
+    .teglia__griglia > :global(*) { border-radius: 0 !important; }
+    .teglia__griglia > :global(:nth-child(1)) { border-top-left-radius: 14px !important; }
+    .teglia__griglia > :global(:nth-child(2)) { border-top-right-radius: 14px !important; }
+    .teglia__griglia > :global(:nth-child(7)) { border-bottom-left-radius: 14px !important; }
+    .teglia__griglia > :global(:nth-child(8)) { border-bottom-right-radius: 14px !important; }
+    .teglia__tagli { display: none; }
+  }
+</style>

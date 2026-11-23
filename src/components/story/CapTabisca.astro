@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Foto from '../ui/Foto.astro';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+const fotoCap = cap.foto.filter((f) => f.src && f.consenso);
+const riga1 = [
+  { nota: "foto d'epoca: l'insegna di TABISCA", alt: "L'insegna di TABISCA" },
+  { nota: "foto d'epoca: il banco con le teglie", alt: 'Il banco di TABISCA con le teglie' },
+  { nota: "foto d'epoca: il forno", alt: 'Il forno di TABISCA' },
+  { nota: "foto d'epoca: la sala del locale grande", alt: 'La sala di TABISCA' },
+  { nota: "foto d'epoca: un trancio servito", alt: 'Un trancio servito da TABISCA' },
+];
+const riga2 = [
+  { nota: 'foto di famiglia, solo con il consenso', alt: 'La famiglia a TABISCA' },
+  { nota: "foto d'epoca: la vetrina", alt: 'La vetrina di TABISCA' },
+  { nota: "foto d'epoca: le teglie in fila", alt: 'Teglie in fila' },
+  { nota: 'foto di famiglia, solo con il consenso', alt: 'La famiglia al lavoro' },
+  { nota: "foto d'epoca: la pizza tonda (dal 2016)", alt: 'La pizza tonda di TABISCA' },
+];
+type Voce = { src: string | null; alt: string; nota: string; didascalia?: string };
+const album1: Voce[] = fotoCap.length
+  ? fotoCap.map((f) => ({ src: f.src ?? null, alt: f.alt, nota: f.didascalia ?? '', didascalia: f.didascalia }))
+  : riga1.map((f) => ({ ...f, src: null }));
+---
+<section id={cap.ancora} class="cap cap-tabisca su-scuro" data-anim="cap-tabisca" data-capitolo={cap.etichetta} data-tema="scuro" aria-labelledby={`${cap.ancora}-t`}>
+  <div class="cap-tabisca__gigante display" aria-hidden="true" data-testo="TABISCA · TABISCA · TABISCA · TABISCA ·"></div>
+  <div class="contenitore cap-tabisca__testo cap__testo" data-anim="rivela">
+    <p class="occhiello">{cap.occhiello}</p>
+    <h2 id={`${cap.ancora}-t`} class="cap__titolo">{cap.titolo}</h2>
+    <p class="lead">{cap.testo}</p>
+  </div>
+  <div class="cap-tabisca__strisce" aria-label="Album di TABISCA">
+    <ul class="striscia" data-striscia="1">
+      {album1.map((f) => (
+        <li><Foto class="striscia__foto" src={f.src} alt={f.alt} nota={f.nota} didascalia={f.didascalia} sfondo="#1d1b19" inchiostro="#f6f1e7" sizes="(min-width: 900px) 30vw, 70vw" /></li>
+      ))}
+    </ul>
+    <ul class="striscia" data-striscia="-1">
+      {riga2.map((f) => (
+        <li><Foto class="striscia__foto" alt={f.alt} nota={f.nota} sfondo="#1d1b19" inchiostro="#f6f1e7" sizes="(min-width: 900px) 30vw, 70vw" /></li>
+      ))}
+    </ul>
+  </div>
+  <p class="contenitore cap-tabisca__parole display" aria-hidden="true">
+    <span>il calore</span> <span class="rosso">·</span> <span>l'accoglienza</span>
+  </p>
+</section>
+
+<style>
+  .cap-tabisca { padding-block: clamp(90px, 14vw, 200px) clamp(80px, 10vw, 150px); overflow: clip; }
+  .cap-tabisca__gigante { position: absolute; top: clamp(40px, 6vw, 90px); left: 0; margin: 0; white-space: nowrap; font-size: clamp(6rem, 20vw, 22rem); line-height: 0.8; color: transparent; -webkit-text-stroke: 2px rgb(246 241 231 / 0.16); pointer-events: none; }
+  .cap-tabisca__gigante::before { content: attr(data-testo); display: inline-block; }
+  .cap-tabisca__testo { position: relative; padding-top: clamp(60px, 10vw, 160px); }
+  .cap-tabisca__strisce { display: grid; gap: clamp(12px, 1.6vw, 22px); margin-top: clamp(50px, 7vw, 100px); }
+  .striscia { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(12px, 1.6vw, 22px); width: max-content; will-change: transform; }
+  .striscia li { width: clamp(220px, 26vw, 400px); flex: none; }
+  .striscia[data-striscia='-1'] { margin-left: -18vw; }
+  .striscia :global(.striscia__foto) { aspect-ratio: 4 / 3; }
+  .striscia :global(.foto--vuota .foto__nota) { background: #2a2826; color: var(--carta); }
+  .cap-tabisca__parole { margin: clamp(50px, 7vw, 100px) auto 0; font-size: var(--fs-xl); display: flex; flex-wrap: wrap; gap: 0.3em; }
+</style>

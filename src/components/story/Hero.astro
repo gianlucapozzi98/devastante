@@ -1,0 +1,114 @@
+---
+import Logo from '../brand/Logo.astro';
+import { ordinaHref, prestoInApertura, dataAperturaLeggibile } from '../../lib/site';
+const data = dataAperturaLeggibile();
+const testoBollino = prestoInApertura
+  ? (data ? `Apre il ${data} · ` : 'Presto in apertura · ').repeat(2)
+  : 'Pizza in teglia · Smash burger · ';
+---
+<section class="hero" data-anim="hero loader" aria-labelledby="hero-titolo">
+  <!-- Pennellata: SVG statico (fallback e movimento ridotto); il canvas WebGL la sostituisce quando può -->
+  <svg class="hero__salsa" viewBox="0 0 1600 400" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="pennello-bordo" x="-5%" y="-30%" width="110%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.18" numOctaves="3" seed="7" />
+        <feDisplacementMap in="SourceGraphic" scale="34" />
+      </filter>
+    </defs>
+    <path d="M-40 250 C 220 120, 420 120, 640 200 S 1060 330, 1280 230 S 1560 120, 1660 170" fill="none" stroke="#E30613" stroke-width="120" stroke-linecap="round" filter="url(#pennello-bordo)" />
+  </svg>
+  <div class="hero__gl" data-hero-gl aria-hidden="true"></div>
+
+  <div class="hero__in contenitore">
+    <p class="occhiello hero__occhiello" data-hero-entra>Cesano Boscone · Pizza in teglia e smash burger</p>
+    <h1 id="hero-titolo" class="hero__logo" data-hero-logo>
+      <span class="sr-only">DEVASTANTE, pizza in teglia e smash burger a Cesano Boscone</span>
+      <Logo animabile etichetta={null} class="hero__svg" />
+    </h1>
+    <p class="hero__frase display" data-hero-entra>
+      La teglia dei nonni,<br />di nuovo qui.
+    </p>
+    <div class="hero__cta" data-hero-entra>
+      <a class="btn" href={ordinaHref()} data-ordina>
+        Ordina
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn--linea" href="/menu">Guarda il menu</a>
+    </div>
+  </div>
+
+  <a class="bollino" href={prestoInApertura ? '#avvisi' : '/menu'} data-hero-entra>
+    <span class="sr-only">{prestoInApertura ? (data ? `Apre il ${data}: iscriviti agli avvisi` : 'Presto in apertura: iscriviti agli avvisi') : 'Pizza in teglia e smash burger: guarda il menu'}</span>
+    <svg class="bollino__giro" viewBox="0 0 200 200" aria-hidden="true">
+      <defs><path id="bollino-cerchio" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" /></defs>
+      <circle cx="100" cy="100" r="98" fill="#fff" />
+      <text><textPath href="#bollino-cerchio" textLength="488">{testoBollino}</textPath></text>
+    </svg>
+    <img class="bollino__mono" src="/brand/devastante-monogramma.svg" alt="" width="728" height="867" />
+  </a>
+
+  <p class="hero__scorri" aria-hidden="true" data-hero-entra>
+    <span>Scorri · un trancio alla volta</span>
+    <svg viewBox="0 0 24 40"><path d="M12 4v30m-7-7 7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </p>
+
+  <!-- Apertura (caricamento): copre la pagina solo alla prima visita, mai più di 1,2 s, saltabile -->
+  <div class="apertura" data-apertura aria-hidden="true">
+    <div class="apertura__su"></div>
+    <div class="apertura__giu"></div>
+    <svg class="apertura__taglio" viewBox="0 0 1000 20" preserveAspectRatio="none"><path d="M0 10 C 120 4, 240 16, 360 10 S 600 4, 720 10 S 900 16, 1000 9" fill="none" stroke="#E30613" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke" /></svg>
+  </div>
+  <button class="apertura__salta btn btn--piccolo btn--nero" type="button" data-salta>Salta l'intro</button>
+</section>
+
+<style>
+  .hero {
+    position: relative; min-height: 100svh; display: grid; align-items: center;
+    padding-block: calc(var(--nav-h) + 24px) 120px; overflow: clip;
+  }
+  .hero__salsa, .hero__gl { position: absolute; left: 0; width: 100%; pointer-events: none; }
+  .hero__salsa { top: 50%; height: 44%; opacity: 0.95; }
+  .hero__gl { inset: 0; height: 100%; }
+  :global(html.gl-attivo) .hero__salsa { display: none; }
+  .hero__in { position: relative; display: grid; justify-items: center; text-align: center; gap: clamp(14px, 2.4vw, 28px); }
+  .hero__occhiello { justify-self: center; }
+  .hero__logo { width: min(100%, 1060px); margin: 0; line-height: 0; position: relative; }
+  .hero__frase { font-size: var(--fs-xxl); margin: clamp(10px, 3vh, 40px) 0 0; line-height: 0.95; }
+  .hero__riga { display: block; }
+  .hero__riga:last-child { color: var(--nero); }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 6px; }
+  .hero__cta .btn--linea { background: var(--carta); }
+  .hero__cta .btn--linea:hover { background: var(--nero); }
+
+  .bollino { position: absolute; right: clamp(12px, 4vw, 64px); top: calc(var(--nav-h) + 4vh); width: clamp(96px, 11vw, 150px); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; text-decoration: none; filter: drop-shadow(0 8px 18px rgb(0 0 0 / 0.12)); }
+  .bollino__giro { position: absolute; inset: 0; width: 100%; height: 100%; animation: gira 22s linear infinite; }
+  .bollino__giro text { font-family: var(--f-body); font-weight: 900; font-size: 16.5px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--nero); }
+  .bollino__mono { position: relative; z-index: 1; width: 42%; height: auto; transition: transform var(--t-ui) var(--ease-out); }
+  .bollino:hover .bollino__mono { transform: rotate(-8deg) scale(1.08); }
+  @keyframes gira { to { transform: rotate(360deg); } }
+
+  .hero__scorri { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); margin: 0; display: grid; white-space: nowrap; justify-items: center; gap: 4px; font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+  .hero__scorri svg { width: 18px; height: 30px; animation: scendi 1.8s var(--ease-io) infinite; }
+  @keyframes scendi { 50% { transform: translateY(6px); } }
+
+  /* ---- apertura ---- */
+  .apertura, .apertura__salta { display: none; }
+  :global(html.con-apertura) .apertura { display: block; position: fixed; inset: 0; z-index: 112; pointer-events: auto; }
+  :global(html.con-apertura) .apertura__salta { display: inline-flex; position: fixed; right: 20px; bottom: 20px; z-index: 114; }
+  :global(html.con-apertura) .hero__logo { z-index: 113; }
+  .apertura__su, .apertura__giu { position: absolute; left: 0; right: 0; background: var(--carta) var(--grana); }
+  .apertura__su { top: 0; height: var(--taglio-y, 50%); }
+  .apertura__giu { top: var(--taglio-y, 50%); bottom: 0; }
+  .apertura__taglio { position: absolute; left: 0; width: 100%; height: 20px; top: calc(var(--taglio-y, 50%) - 10px); overflow: visible; }
+  :global(html.con-apertura) .hero__svg .logo__lettera, :global(html.con-apertura) .hero__svg .logo__car, :global(html.con-apertura) .hero__svg .logo__linea { opacity: 0; }
+
+  @media (max-width: 899px) {
+    .hero { padding-block: calc(var(--nav-h) + 8px) 150px; }
+    .hero__occhiello { max-width: 30ch; text-align: center; }
+    .hero__occhiello::before { display: none; }
+    .hero__salsa { top: 50%; height: 26%; }
+    .bollino { top: auto; bottom: 18px; right: 14px; width: 92px; }
+    .hero__scorri { left: var(--gutter); transform: none; justify-items: start; bottom: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bollino__giro { animation: none; } }
+</style>

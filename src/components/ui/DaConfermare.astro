@@ -1,0 +1,6 @@
+---
+/** Segnaposto evidente per un dato che il cliente deve ancora fornire. Mai sostituirlo con un dato inventato. */
+interface Props { titolo?: string }
+const { titolo = 'Dato da confermare con il cliente' } = Astro.props;
+---
+<span class="da-confermare" title={titolo}>[<slot /> da confermare]</span>

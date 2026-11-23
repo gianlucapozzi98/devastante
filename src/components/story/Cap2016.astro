@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+// Forme geometriche (non cibo): la teglia rettangolare diventa tonda.
+const RETT = 'M70 90 H330 Q370 90 370 130 V270 Q370 310 330 310 H70 Q30 310 30 270 V130 Q30 90 70 90 Z';
+const TONDA = 'M200 50 C282.8 50 350 117.2 350 200 C350 282.8 282.8 350 200 350 C117.2 350 50 282.8 50 200 C50 117.2 117.2 50 200 50 Z';
+---
+<section id={cap.ancora} class="cap cap-2016" data-anim="cap-2016" data-capitolo={cap.etichetta} aria-labelledby={`${cap.ancora}-t`}>
+  <div class="cap-2016__pin contenitore">
+    <div class="cap-2016__scena" aria-hidden="true">
+      <span class="cap__anno cap-2016__anno" data-testo={cap.etichetta}></span>
+      <svg class="cap-2016__forma" viewBox="0 0 400 400">
+        <path class="cap-2016__fantasma" d={RETT} />
+        <path class="cap-2016__morph" d={RETT} data-rett={RETT} data-tonda={TONDA} />
+      </svg>
+      <p class="cap-2016__etichette"><span class="e-teglia">teglia</span><span class="e-tonda">tonda</span></p>
+    </div>
+    <div class="cap__testo cap-2016__testo">
+      <p class="occhiello">{cap.occhiello}</p>
+      <h2 id={`${cap.ancora}-t`} class="cap__titolo">{cap.titolo}</h2>
+      <p class="lead">{cap.testo}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cap-2016 { padding-block: clamp(60px, 8vw, 120px); }
+  .cap-2016__pin { min-height: 100svh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(24px, 5vw, 80px); }
+  .cap-2016__scena { position: relative; display: grid; place-items: center; }
+  .cap-2016__anno::before { content: attr(data-testo); }
+  .cap-2016__anno { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-58%); text-align: center; color: transparent; -webkit-text-stroke: 2px var(--teglia); z-index: 0; }
+  .cap-2016__forma { position: relative; width: min(100%, 440px); overflow: visible; z-index: 1; }
+  .cap-2016__morph { fill: var(--rosso); stroke: var(--nero); stroke-width: 6; }
+  .cap-2016__fantasma { fill: none; stroke: var(--nero); stroke-width: 3; stroke-dasharray: 10 10; opacity: 0; }
+  .cap-2016__etichette { position: relative; z-index: 1; margin: 18px 0 0; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; font-size: var(--fs-s); height: 1.4em; }
+  .cap-2016__etichette span { display: block; text-align: center; }
+  .e-tonda { position: absolute; inset: 0; opacity: 0; }
+  :global(html.js-pronto) .cap-2016 .e-tonda { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .cap-2016__fantasma { opacity: 0.5; }
+  }
+  @media (max-width: 899px) {
+    .cap-2016__pin { grid-template-columns: 1fr; min-height: auto; }
+    .cap-2016__forma { width: min(78vw, 360px); }
+  }
+</style>

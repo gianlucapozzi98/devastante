@@ -1,0 +1,24 @@
+---
+import Legale from '../layouts/Legale.astro';
+import DaConfermare from '../components/ui/DaConfermare.astro';
+import { impostazioni } from '../lib/site';
+---
+<Legale titolo="Accessibilità" descrizione="Impegno di accessibilità del sito DEVASTANTE: obiettivo WCAG 2.2 livello AA, funzioni disponibili e contatti." occhiello="Accessibilità">
+  <p>Vogliamo che il sito sia usabile da tutti. L'obiettivo è la conformità alle <strong>WCAG 2.2, livello AA</strong>.</p>
+  <h2>Cosa abbiamo fatto</h2>
+  <ul>
+    <li>La storia si legge tutta anche senza animazioni: se nel sistema hai attivato "riduci movimento", il sito mostra testi e immagini fermi e lo scorrimento è quello normale del browser.</li>
+    <li>Tutto si usa da tastiera, con il focus sempre visibile; c'è un collegamento "Vai al contenuto" all'inizio di ogni pagina.</li>
+    <li>Colori con contrasto adeguato; il rosso del marchio è usato per testi grandi o con testo bianco.</li>
+    <li>Immagini con testo alternativo; le grafiche decorative sono nascoste agli screen reader.</li>
+    <li>Il suono è spento di default e si accende solo con un pulsante.</li>
+    <li>L'animazione di apertura dura meno di 1,2 secondi e si può saltare.</li>
+  </ul>
+  <h2>Limiti noti</h2>
+  <ul>
+    <li>Le foto e i video veri del locale non sono ancora disponibili: al loro posto ci sono riquadri dichiarati "Foto in arrivo".</li>
+    <li>La mappa interattiva è di un fornitore esterno: la sua accessibilità dipende da esso; indirizzo e link restano sempre disponibili in testo.</li>
+  </ul>
+  <h2>Segnalazioni</h2>
+  <p>Se trovi un problema scrivici a {impostazioni.email ? <a href={`mailto:${impostazioni.email}`}>{impostazioni.email}</a> : <DaConfermare>email per le segnalazioni</DaConfermare>}: risponderemo il prima possibile.</p>
+</Legale>

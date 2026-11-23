@@ -1,0 +1,95 @@
+---
+import { azienda, impostazioni, ordinaHref, indirizzoCompleto, prestoInApertura } from '../../lib/site';
+import DaConfermare from './DaConfermare.astro';
+const anno = new Date().getFullYear();
+const indirizzo = indirizzoCompleto();
+---
+<footer class="piede" data-anim="rivela">
+  <div class="contenitore piede__alto">
+    <div class="piede__marchio">
+      <img src="/brand/devastante-logo.svg" alt="DEVASTANTE · Pizza e smash" width="2130" height="675" loading="lazy" decoding="async" />
+      <p class="piede__frase display">La teglia dei nonni, di nuovo qui.</p>
+    </div>
+    <div class="piede__colonne">
+      <div>
+        <h2 class="piede__titolo">Il locale</h2>
+        <p>
+          {indirizzo ? indirizzo : <><DaConfermare>indirizzo</DaConfermare><br />{impostazioni.citta}</>}
+        </p>
+        <p>
+          {impostazioni.telefono ? <a href={`tel:${impostazioni.telefono.replace(/\s+/g, '')}`}>{impostazioni.telefono}</a> : <DaConfermare>telefono</DaConfermare>}
+        </p>
+        {prestoInApertura && <p class="piede__stato">Presto in apertura</p>}
+      </div>
+      <div>
+        <h2 class="piede__titolo">Esplora</h2>
+        <ul>
+          <li><a href="/menu">Menu</a></li>
+          <li><a href="/smash">Smash</a></li>
+          <li><a href="/la-storia">La storia</a></li>
+          <li><a href="/dove-siamo">Dove siamo</a></li>
+          <li><a href="/allergeni">Allergeni</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="piede__titolo">Seguici</h2>
+        {impostazioni.social.length ? (
+          <ul>{impostazioni.social.map((s) => <li><a href={s.url ?? '#'} rel="noopener" target="_blank">{s.nome}<span class="sr-only"> (si apre in una nuova finestra)</span></a></li>)}</ul>
+        ) : <p><DaConfermare>link ai social ufficiali</DaConfermare></p>}
+        <a class="btn btn--piccolo" href={ordinaHref()}>Ordina</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="piede__legale">
+    <div class="contenitore piede__legale-in">
+      <p class="piede__azienda">
+        {azienda.ragioneSociale || <DaConfermare>ragione sociale</DaConfermare>}
+        {azienda.formaGiuridica && ` ${azienda.formaGiuridica}`} ·
+        Sede legale: {azienda.sedeLegale || <DaConfermare>sede legale</DaConfermare>} ·
+        P.IVA {azienda.partitaIva || <DaConfermare>P.IVA</DaConfermare>} ·
+        C.F. {azienda.codiceFiscale || <DaConfermare>C.F.</DaConfermare>} ·
+        REA {azienda.rea || <DaConfermare>REA</DaConfermare>} ·
+        {azienda.capitaleSociale && <>Capitale sociale {azienda.capitaleSociale} · </>}
+        PEC {azienda.pec || <DaConfermare>PEC</DaConfermare>}
+      </p>
+      <ul class="piede__link">
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/cookie">Cookie</a></li>
+        <li><button type="button" class="piede__cookie" data-apri-consenso>Preferenze cookie</button></li>
+        <li><a href="/termini">Termini</a></li>
+        <li><a href="/allergeni">Allergeni</a></li>
+        <li><a href="/accessibilita">Accessibilità</a></li>
+      </ul>
+      <p class="piede__copy">© {anno} DEVASTANTE · Cesano Boscone</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .piede { position: relative; background: var(--carta); border-top: 3px solid var(--nero); }
+  .piede__alto { display: grid; grid-template-columns: 1.1fr 1.4fr; gap: clamp(32px, 6vw, 96px); padding-block: clamp(56px, 8vw, 110px); }
+  .piede__marchio img { width: min(100%, 460px); height: auto; }
+  .piede__frase { font-size: var(--fs-xl); margin: 28px 0 0; max-width: 12ch; }
+  .piede__colonne { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .piede__titolo { font-family: var(--f-body); font-weight: 800; font-size: var(--fs-xs); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px; color: var(--cenere); }
+  .piede ul { list-style: none; margin: 0; padding: 0; }
+  .piede__colonne li { margin-bottom: 6px; }
+  .piede__colonne a:not(.btn) { text-decoration: none; font-weight: 600; }
+  .piede__colonne a:not(.btn):hover { color: var(--rosso); text-decoration: underline; }
+  .piede__colonne .btn { margin-top: 12px; }
+  .piede__stato { display: inline-block; font-weight: 800; color: var(--bianco); background: var(--nero); padding: 0.25em 0.7em; border-radius: 999px; font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; }
+  .piede__legale { background: var(--nero); color: var(--carta); font-size: var(--fs-xs); }
+  .piede__legale-in { display: grid; gap: 14px; padding-block: 24px 32px; }
+  .piede__azienda { margin: 0; line-height: 1.9; }
+  .piede__link { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+  .piede__link a, .piede__cookie { color: var(--carta); font-weight: 700; text-decoration: underline; text-underline-offset: 0.2em; background: none; border: 0; padding: 6px 0; font-size: inherit; }
+  .piede__link a:hover, .piede__cookie:hover { color: var(--formaggio); }
+  .piede__copy { margin: 0; opacity: 0.85; }
+  .piede__legale :global(:focus-visible) { outline-color: var(--bianco); }
+  @media (max-width: 899px) {
+    .piede__alto { grid-template-columns: 1fr; }
+    .piede__colonne { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) { .piede__colonne { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,18 @@
+---
+/** La rotella tagliapizza: icona grafica (non cibo). La lama gira con lo scroll. */
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<svg class:list={['rotella', cls]} viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <path class="rotella__manico" d="M36 36 L58 58" stroke="#000" stroke-width="9" stroke-linecap="round" />
+  <g class="rotella__lama">
+    <circle cx="24" cy="24" r="20" fill="#9C9A96" />
+    <circle cx="24" cy="24" r="20" fill="none" stroke="#000" stroke-width="3" />
+    <path d="M24 7v34M7 24h34M12 12l24 24M36 12L12 36" stroke="#000" stroke-width="2" stroke-linecap="round" opacity=".55" />
+    <circle cx="24" cy="24" r="5.5" fill="#E30613" stroke="#000" stroke-width="2.5" />
+  </g>
+</svg>
+<style>
+  .rotella { overflow: visible; }
+  .rotella__lama { transform-box: fill-box; transform-origin: 50% 50%; }
+</style>

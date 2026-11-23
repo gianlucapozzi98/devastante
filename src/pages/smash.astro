@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import TestaPagina from '../components/ui/TestaPagina.astro';
+import Foto from '../components/ui/Foto.astro';
+import { smash, ordinaHref } from '../lib/site';
+---
+<Base titolo="Smash burger | DEVASTANTE · Cesano Boscone" descrizione="Lo smash burger di DEVASTANTE: carne schiacciata sulla piastra. Scopri l'anatomia strato per strato e prova il gesto dello smash.">
+  <TestaPagina occhiello="Smash" titolo="Carne, piastra, schiaccia.">
+    <p>Lo smash burger nasce da un gesto: la carne va sulla piastra rovente e la spatola la schiaccia. Qui sotto lo smontiamo strato per strato. Gli strati segnati <span class="da-confermare">[da confermare]</span> aspettano il menu definitivo.</p>
+  </TestaPagina>
+
+  <section class="anatomia" data-anim="anatomia" aria-labelledby="anatomia-t">
+    <div class="contenitore anatomia__in">
+      <div class="anatomia__testa">
+        <h2 id="anatomia-t" class="display anatomia__titolo">Anatomia dello smash</h2>
+        <p>Scorri: gli strati si avvicinano e si schiacciano, come sulla piastra.</p>
+      </div>
+      <ol class="anatomia__pila">
+        {smash.strati.map((s, i) => (
+          <li class="strato" style={`--i:${i}`}>
+            <Foto class="strato__foto" src={s.foto} alt={s.nome} nota={`foto vera: ${s.nome.toLowerCase()}`} sizes="(min-width: 900px) 34vw, 80vw" />
+            <div class="strato__etichetta">
+              <span class="strato__num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="display">{s.nome} {!s.confermato && <span class="da-confermare">[da confermare]</span>}</h3>
+              <p>{s.descrizione}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="gesto su-scuro" aria-labelledby="gesto-t" data-anim="spatola">
+    <div class="contenitore gesto__in">
+      <div>
+        <p class="occhiello">Il gesto</p>
+        <h2 id="gesto-t" class="display gesto__titolo">Prova a schiacciare</h2>
+        <p class="gesto__testo">Tieni premuto il pulsante (o la barra spaziatrice quando è selezionato). Se hai acceso il suono, senti la piastra.</p>
+        <button type="button" class="btn gesto__btn" data-schiaccia aria-describedby="gesto-stato">Tieni premuto per schiacciare</button>
+        <p id="gesto-stato" class="gesto__stato" aria-live="polite">Smash fatti: <span data-conta>0</span></p>
+      </div>
+      <div class="gesto__scena" aria-hidden="true">
+        <svg class="gesto__spatola" viewBox="0 0 300 220">
+          <rect x="128" y="0" width="44" height="120" rx="14" fill="#3a3836" stroke="#f6f1e7" stroke-width="4" />
+          <path d="M120 112 H180 L200 150 H100 Z" fill="#8a8884" />
+          <rect x="20" y="148" width="260" height="64" rx="8" fill="#b8b6b2" stroke="#000" stroke-width="4" />
+        </svg>
+        <p class="gesto__parola display">SMASH</p>
+        <div class="gesto__piastra"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contenitore smash-fine" data-anim="rivela">
+    <p class="display smash-fine__frase" data-rivela data-split>Fame?</p>
+    <div class="smash-fine__azioni" data-rivela>
+      <a class="btn" href={ordinaHref()}>Ordina</a>
+      <a class="btn btn--linea" href="/menu">Guarda il menu</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .anatomia { padding-block: clamp(40px, 6vw, 80px) clamp(80px, 10vw, 140px); }
+  .anatomia__in { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(24px, 5vw, 80px); align-items: start; }
+  .anatomia__testa { position: sticky; top: calc(var(--nav-h) + 40px); }
+  .anatomia__titolo { font-size: var(--fs-xl); margin-bottom: 14px; }
+  .anatomia__pila { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(18px, 3vw, 40px); }
+  .strato { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
+  .strato :global(.strato__foto) { aspect-ratio: 16 / 9; border-radius: 999px / 60%; }
+  .strato__num { font-weight: 900; color: var(--rosso); letter-spacing: 0.1em; }
+  .strato__etichetta h3 { font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.2rem); margin: 4px 0 6px; }
+  .strato__etichetta h3 .da-confermare { font-size: 0.45em; vertical-align: middle; }
+  .strato__etichetta p { margin: 0; color: var(--cenere); }
+  .gesto { padding-block: clamp(80px, 10vw, 140px); }
+  .gesto__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 80px); align-items: center; }
+  .gesto__titolo { font-size: var(--fs-xl); margin: 14px 0; }
+  .gesto__btn { margin-top: 10px; user-select: none; -webkit-user-select: none; touch-action: none; }
+  .gesto__stato { margin-top: 14px; font-weight: 700; }
+  .gesto__scena { position: relative; display: grid; justify-items: center; align-content: end; min-height: 420px; padding-bottom: 20px; }
+  .gesto__spatola { position: absolute; top: 0; width: min(60%, 300px); overflow: visible; }
+  .gesto__parola { margin: 0; font-size: clamp(4rem, 10vw, 9rem); line-height: 0.8; color: var(--rosso); transform-origin: 50% 100%; }
+  .gesto__piastra { width: 100%; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3a3836, #6f6d69, #3a3836); }
+  .smash-fine { padding-block: clamp(80px, 10vw, 140px); text-align: center; display: grid; justify-items: center; gap: 24px; }
+  .smash-fine__frase { font-size: var(--fs-mega); margin: 0; }
+  .smash-fine__azioni { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  @media (max-width: 899px) {
+    .anatomia__in, .gesto__in { grid-template-columns: 1fr; }
+    .anatomia__testa { position: static; }
+    .strato { grid-template-columns: 1fr; }
+  }
+</style>

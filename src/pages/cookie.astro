@@ -1,0 +1,36 @@
+---
+import Legale from '../layouts/Legale.astro';
+import DaConfermare from '../components/ui/DaConfermare.astro';
+---
+<Legale titolo="Informativa cookie" descrizione="Quali cookie e tecnologie usa il sito DEVASTANTE e come gestire le tue preferenze.">
+  <p>Questa informativa segue le Linee guida del Garante privacy sui cookie e altri strumenti di tracciamento (10 giugno 2021).</p>
+
+  <h2>Strumenti tecnici (sempre attivi)</h2>
+  <p>Servono a far funzionare il sito e non richiedono consenso. Sono salvati nel tuo browser, non sono cookie inviati a terzi.</p>
+  <table>
+    <thead><tr><th>Nome</th><th>Tipo</th><th>Scopo</th><th>Durata</th></tr></thead>
+    <tbody>
+      <tr><td>dev-consenso</td><td>localStorage</td><td>Ricorda le tue scelte sui cookie</td><td>6 mesi, poi te lo richiediamo</td></tr>
+      <tr><td>dev-suono</td><td>localStorage</td><td>Ricorda se hai acceso il suono (spento di default)</td><td>Finché non cancelli i dati del browser</td></tr>
+      <tr><td>dev-aperto</td><td>sessionStorage</td><td>Evita di ripetere l'animazione di apertura nella stessa visita</td><td>Fino alla chiusura della scheda</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Strumenti di terze parti (solo con consenso)</h2>
+  <table>
+    <thead><tr><th>Categoria</th><th>Fornitore</th><th>Scopo</th><th>Stato</th></tr></thead>
+    <tbody>
+      <tr><td>Mappe e contenuti esterni</td><td><DaConfermare>fornitore della mappa</DaConfermare></td><td>Mostrare la mappa interattiva del locale</td><td>Caricata solo dopo il consenso</td></tr>
+      <tr><td>Statistiche</td><td>—</td><td>Misurare le visite in forma aggregata</td><td>Non attive</td></tr>
+    </tbody>
+  </table>
+  <p>Prima del tuo consenso nessuno di questi strumenti viene caricato: al loro posto vedi un riquadro con un link.</p>
+
+  <h2>Come gestire le preferenze</h2>
+  <p>Nel banner puoi scegliere "Accetta", "Rifiuta" o "Personalizza"; chiudere il banner con la X equivale a rifiutare. Puoi cambiare idea in qualsiasi momento:</p>
+  <p><button type="button" class="btn btn--piccolo" data-apri-consenso>Apri le preferenze cookie</button></p>
+  <p>Puoi anche cancellare i dati salvati dalle impostazioni del browser.</p>
+
+  <h2>Titolare</h2>
+  <p>Vedi l'<a href="/privacy">informativa privacy</a>.</p>
+</Legale>

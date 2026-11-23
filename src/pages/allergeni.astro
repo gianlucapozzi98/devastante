@@ -1,0 +1,40 @@
+---
+import Legale from '../layouts/Legale.astro';
+import DaConfermare from '../components/ui/DaConfermare.astro';
+import { getCollection } from 'astro:content';
+const allergeni = [
+  ['glutine', 'Cereali contenenti glutine'], ['crostacei', 'Crostacei'], ['uova', 'Uova'], ['pesce', 'Pesce'], ['arachidi', 'Arachidi'],
+  ['soia', 'Soia'], ['latte', 'Latte e derivati (incluso lattosio)'], ['frutta-a-guscio', 'Frutta a guscio'], ['sedano', 'Sedano'], ['senape', 'Senape'],
+  ['sesamo', 'Semi di sesamo'], ['solfiti', 'Anidride solforosa e solfiti'], ['lupini', 'Lupini'], ['molluschi', 'Molluschi'],
+] as const;
+const voci = (await getCollection('menu')).map((v) => v.data).sort((a, b) => a.categoria.localeCompare(b.categoria) || a.ordine - b.ordine);
+const brevi: Record<string, string> = { glutine: 'Glu', crostacei: 'Cro', uova: 'Uov', pesce: 'Pes', arachidi: 'Ara', soia: 'Soi', latte: 'Lat', 'frutta-a-guscio': 'Gus', sedano: 'Sed', senape: 'Sen', sesamo: 'Ses', solfiti: 'Sol', lupini: 'Lup', molluschi: 'Mol' };
+---
+<Legale titolo="Allergeni" descrizione="Gli allergeni presenti nei prodotti di DEVASTANTE secondo il Regolamento UE 1169/2011: pizza in teglia, smash burger e bevande." occhiello="Informazioni alimentari">
+  <p>Secondo il Regolamento (UE) n. 1169/2011 indichiamo per ogni prodotto la presenza dei 14 allergeni. <strong>Prima di ordinare, in caso di allergie o intolleranze, chiedi sempre al personale.</strong></p>
+  <p>Contaminazioni crociate: <DaConfermare>informazioni dal titolare (stessi forni, piastre, friggitrici)</DaConfermare>.</p>
+
+  <h2>Prodotto per prodotto</h2>
+  <div style="overflow-x:auto" tabindex="0" role="region" aria-label="Tabella allergeni per prodotto, scorrevole">
+    <table>
+      <caption class="sr-only">Presenza degli allergeni per prodotto. "Sì" = contiene; "—" = non dichiarato.</caption>
+      <thead>
+        <tr><th scope="col">Prodotto</th>{allergeni.map(([id, nome]) => <th scope="col"><abbr title={nome}>{brevi[id]}</abbr></th>)}</tr>
+      </thead>
+      <tbody>
+        {voci.map((v) => (
+          <tr>
+            <th scope="row">{v.nome}</th>
+            {v.confermato
+              ? allergeni.map(([id]) => <td>{v.allergeni.includes(id) ? 'Sì' : '—'}</td>)
+              : <td colspan={allergeni.length}><DaConfermare>allergeni del prodotto</DaConfermare></td>}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>I 14 allergeni</h2>
+  <ul>{allergeni.map(([id, nome]) => <li><strong>{brevi[id]}</strong> — {nome}</li>)}</ul>
+  <p>Note per il titolare (da verificare): l'impasto contiene glutine; il formaggio contiene latte; uova, senape e sesamo possono essere presenti in salse e pane dello smash. Ogni scheda va compilata con le ricette reali.</p>
+</Legale>

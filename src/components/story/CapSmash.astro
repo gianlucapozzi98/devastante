@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+---
+<section id={cap.ancora} class="cap cap-smash su-scuro" data-anim="cap-smash" data-capitolo={cap.etichetta} data-tema="scuro" aria-labelledby={`${cap.ancora}-t`}>
+  <div class="cap-smash__pin contenitore">
+    <div class="cap-smash__scena" aria-hidden="true">
+      <svg class="cap-smash__spatola" viewBox="0 0 300 220">
+        <rect x="128" y="0" width="44" height="120" rx="14" fill="#3a3836" stroke="#f6f1e7" stroke-width="4" />
+        <rect x="138" y="20" width="24" height="6" rx="3" fill="#f6f1e7" opacity=".5" />
+        <path d="M120 112 H180 L200 150 H100 Z" fill="#8a8884" />
+        <rect x="20" y="148" width="260" height="64" rx="8" fill="url(#lama)" stroke="#000" stroke-width="4" />
+        <defs>
+          <linearGradient id="lama" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#d6d4d0" /><stop offset=".5" stop-color="#9c9a96" /><stop offset="1" stop-color="#bfbdb9" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <p class="cap-smash__parola display">SMASH</p>
+      <svg class="cap-smash__schizzi" viewBox="0 0 600 120">
+        <g stroke="#F2C14E" stroke-width="7" stroke-linecap="round">
+          <path d="M60 100 L10 70" /><path d="M90 80 L50 30" /><path d="M140 70 L130 15" />
+          <path d="M540 100 L590 70" /><path d="M510 80 L550 30" /><path d="M460 70 L470 15" />
+        </g>
+      </svg>
+      <div class="cap-smash__piastra"></div>
+    </div>
+    <div class="cap__testo cap-smash__testo">
+      <p class="occhiello">{cap.occhiello}</p>
+      <h2 id={`${cap.ancora}-t`} class="cap__titolo">{cap.titolo}</h2>
+      <p class="lead">{cap.testo}</p>
+      <a class="cap__link" href="/smash">L'anatomia dello smash</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cap-smash { overflow: clip; padding-block: clamp(60px, 8vw, 120px); }
+  .cap-smash__pin { min-height: 100svh; display: grid; grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: clamp(28px, 5vw, 80px); }
+  .cap-smash__scena { position: relative; display: grid; justify-items: center; align-content: end; min-height: min(70vh, 640px); padding-bottom: 40px; }
+  .cap-smash__spatola { position: absolute; top: 0; width: min(54%, 340px); overflow: visible; z-index: 2; }
+  .cap-smash__parola { position: relative; margin: 0; font-size: clamp(4.5rem, 13vw, 13rem); line-height: 0.8; color: var(--rosso); transform-origin: 50% 100%; z-index: 1; }
+  .cap-smash__schizzi { position: absolute; bottom: 44px; width: min(100%, 720px); overflow: visible; }
+  .cap-smash__schizzi path { opacity: 0; }
+  .cap-smash__piastra { width: 100%; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3a3836, #6f6d69, #3a3836); }
+  .cap-smash__testo .cap__link { color: var(--formaggio); }
+  @media (prefers-reduced-motion: reduce) {
+    .cap-smash__parola { transform: scale(1.12, 0.5); }
+    .cap-smash__spatola { top: auto; bottom: calc(40px + 0.55 * clamp(4.5rem, 13vw, 13rem)); }
+  }
+  @media (max-width: 899px) {
+    .cap-smash__pin { grid-template-columns: 1fr; min-height: auto; }
+    .cap-smash__scena { min-height: 60vh; }
+  }
+</style>

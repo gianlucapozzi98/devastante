@@ -1,0 +1,96 @@
+---
+/**
+ * Banner cookie secondo le Linee guida del Garante (10 giugno 2021):
+ * - Accetta / Rifiuta con la stessa evidenza, Personalizza per categoria, X = rifiuto;
+ * - nessuno script o contenuto di terzi prima del consenso;
+ * - scelta modificabile da "Preferenze cookie" nel footer; nuova richiesta dopo 6 mesi.
+ * Il sito usa solo archiviazione tecnica (scelta sui cookie, suono on/off, apertura già vista).
+ */
+const categorie = [
+  {
+    id: 'mappe',
+    nome: 'Mappe e contenuti esterni',
+    testo: 'Mappa interattiva del locale (fornitore esterno: può impostare cookie e ricevere il tuo indirizzo IP). Senza consenso vedi un link alla mappa.',
+  },
+  {
+    id: 'statistiche',
+    nome: 'Statistiche',
+    testo: 'Misurazione anonima delle visite. Al momento non è attivo nessuno strumento di statistica.',
+  },
+];
+---
+<div class="consenso" data-consenso-banner role="region" aria-label="Preferenze sui cookie" transition:persist="consenso">
+  <button class="consenso__x" type="button" data-consenso-rifiuta aria-label="Chiudi e rifiuta i cookie non necessari">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+  <p class="consenso__titolo">Un biscotto prima del trancio?</p>
+  <p class="consenso__testo">
+    Usiamo solo cookie tecnici necessari. Con il tuo consenso attiviamo anche contenuti esterni, come la mappa.
+    Puoi cambiare idea quando vuoi da "Preferenze cookie". <a href="/cookie">Informativa cookie</a>.
+  </p>
+  <div class="consenso__azioni">
+    <button class="btn btn--piccolo btn--nero" type="button" data-consenso-rifiuta>Rifiuta</button>
+    <button class="btn btn--piccolo btn--nero" type="button" data-consenso-accetta>Accetta</button>
+    <button class="btn btn--piccolo btn--linea" type="button" data-apri-consenso>Personalizza</button>
+  </div>
+</div>
+
+<dialog class="consenso-dialogo" data-consenso-dialogo aria-labelledby="consenso-titolo" transition:persist="consenso-dialogo">
+  <form method="dialog" class="consenso-dialogo__in" data-consenso-form>
+    <h2 id="consenso-titolo" class="display">Preferenze cookie</h2>
+    <fieldset>
+      <legend class="sr-only">Categorie</legend>
+      <div class="consenso-cat">
+        <div>
+          <p class="consenso-cat__nome">Necessari</p>
+          <p class="consenso-cat__testo">Ricordano la tua scelta sui cookie e se hai acceso il suono. Sempre attivi.</p>
+        </div>
+        <span class="consenso-cat__sempre">Sempre attivi</span>
+      </div>
+      {categorie.map((c) => (
+        <label class="consenso-cat">
+          <div>
+            <span class="consenso-cat__nome">{c.nome}</span>
+            <span class="consenso-cat__testo">{c.testo}</span>
+          </div>
+          <input type="checkbox" name={c.id} class="interruttore" />
+        </label>
+      ))}
+    </fieldset>
+    <div class="consenso__azioni">
+      <button class="btn btn--piccolo btn--nero" value="rifiuta" data-consenso-rifiuta>Rifiuta tutto</button>
+      <button class="btn btn--piccolo btn--nero" value="accetta" data-consenso-accetta>Accetta tutto</button>
+      <button class="btn btn--piccolo btn--linea" value="salva" data-consenso-salva>Salva le scelte</button>
+    </div>
+  </form>
+</dialog>
+
+<style is:global>
+  .consenso {
+    position: fixed; left: 16px; bottom: 16px; z-index: 120; width: min(440px, calc(100vw - 32px));
+    background: var(--carta); color: var(--nero); border-radius: 18px; padding: 22px 22px 20px;
+    box-shadow: 0 0 0 2px var(--nero), 0 18px 50px rgb(0 0 0 / 0.22);
+  }
+  .consenso { display: none; }
+  html.consenso-da-chiedere .consenso { display: block; }
+  .consenso[hidden] { display: none !important; }
+  .consenso__x { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; background: transparent; border-radius: 50%; display: grid; place-items: center; }
+  .consenso__x svg { width: 20px; height: 20px; }
+  .consenso__x:hover { background: rgb(0 0 0 / 0.07); }
+  .consenso__titolo { font-family: var(--f-display); font-size: 1.5rem; line-height: 1; margin: 0 40px 10px 0; }
+  .consenso__testo { font-size: var(--fs-s); margin-bottom: 16px; }
+  .consenso__azioni { display: flex; flex-wrap: wrap; gap: 8px; }
+  .consenso-dialogo { border: 0; border-radius: 22px; padding: 0; width: min(560px, calc(100vw - 24px)); background: var(--carta); color: var(--nero); box-shadow: 0 30px 80px rgb(0 0 0 / 0.35); }
+  .consenso-dialogo::backdrop { background: rgb(0 0 0 / 0.55); }
+  .consenso-dialogo__in { padding: 28px; display: grid; gap: 18px; }
+  .consenso-dialogo h2 { font-size: 2rem; }
+  .consenso-dialogo fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .consenso-cat { display: flex; gap: 16px; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 14px; background: var(--carta-2); }
+  .consenso-cat__nome { display: block; font-weight: 800; margin: 0; }
+  .consenso-cat__testo { display: block; font-size: var(--fs-xs); margin: 2px 0 0; line-height: 1.4; }
+  .consenso-cat__sempre { font-size: var(--fs-xs); font-weight: 800; white-space: nowrap; color: var(--cenere); }
+  .interruttore { appearance: none; -webkit-appearance: none; flex: none; width: 52px; height: 30px; border-radius: 999px; background: var(--cenere); position: relative; cursor: pointer; transition: background var(--t-ui) var(--ease-out); margin: 0; }
+  .interruttore::after { content: ''; position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--bianco); transition: transform var(--t-ui) var(--ease-out); box-shadow: 0 1px 3px rgb(0 0 0 / 0.3); }
+  .interruttore:checked { background: var(--rosso); }
+  .interruttore:checked::after { transform: translateX(22px); }
+</style>

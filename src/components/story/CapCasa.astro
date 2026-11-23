@@ -1,0 +1,76 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import DaConfermare from '../ui/DaConfermare.astro';
+import AvvisiForm from '../ui/AvvisiForm.astro';
+import { impostazioni, orari, ordinaHref, indirizzoCompleto, prestoInApertura, dataAperturaLeggibile } from '../../lib/site';
+interface Props { cap: CollectionEntry<'capitoli'>['data'] }
+const { cap } = Astro.props;
+const indirizzo = indirizzoCompleto();
+const data = dataAperturaLeggibile();
+const orariConfermati = orari.giorni.some((g) => g.stato !== 'da-confermare');
+---
+<section id={cap.ancora} class="cap cap-casa" data-anim="cap-casa" data-capitolo={cap.etichetta} aria-labelledby={`${cap.ancora}-t`}>
+  <div class="contenitore">
+    <p class="occhiello">{cap.occhiello}</p>
+    <h2 id={`${cap.ancora}-t`} class="cap-casa__titolo display">{cap.titolo}.</h2>
+    <p class="lead cap-casa__lead">{cap.testo} {prestoInApertura ? 'Ti aspettiamo presto.' : 'Ti aspettiamo.'}</p>
+
+    <div class="cap-casa__azione">
+      <svg class="cap-casa__filo" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M-20 150 C 160 60, 300 190, 470 120 S 760 40, 880 110 S 1010 170, 1040 110 C 1065 60, 1010 30, 975 52 C 930 80, 960 140, 1020 150" />
+      </svg>
+      <a class="btn cap-casa__ordina" href={ordinaHref()} data-ordina data-cursore="grande">
+        Ordina
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <ul class="cap-casa__schede" data-anim="rivela">
+      <li class="scheda" data-rivela>
+        <h3 class="scheda__titolo">Dove</h3>
+        <p>{indirizzo ?? <><DaConfermare>indirizzo</DaConfermare><br />{impostazioni.citta}</>}</p>
+        <a href="/dove-siamo">Come arrivare</a>
+      </li>
+      <li class="scheda" data-rivela>
+        <h3 class="scheda__titolo">Quando</h3>
+        {prestoInApertura ? (
+          <p><strong>Presto in apertura.</strong><br />{data ? `Apriamo il ${data}.` : <DaConfermare>data di apertura</DaConfermare>}</p>
+        ) : orariConfermati ? (
+          <p><a href="/dove-siamo#orari">Guarda gli orari</a></p>
+        ) : <p><DaConfermare>orari</DaConfermare></p>}
+      </li>
+      <li class="scheda" data-rivela>
+        <h3 class="scheda__titolo">Come ordinare</h3>
+        <p>{impostazioni.telefono ? <a href={`tel:${impostazioni.telefono.replace(/\s+/g, '')}`}>{impostazioni.telefono}</a> : <DaConfermare>telefono e modalità di ordine</DaConfermare>}</p>
+        <a href="/dove-siamo#ordina">Tutti i modi</a>
+      </li>
+    </ul>
+
+    {prestoInApertura && (
+      <div class="cap-casa__avvisi" id="avvisi">
+        <AvvisiForm />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .cap-casa { padding-block: clamp(90px, 12vw, 180px); }
+  .cap-casa__titolo { font-size: var(--fs-mega); line-height: 0.82; margin: 18px 0 20px; }
+  .cap-casa__lead { max-width: 40ch; }
+  .cap-casa__azione { position: relative; margin: clamp(30px, 5vw, 60px) 0; height: clamp(120px, 14vw, 200px); display: flex; align-items: center; justify-content: flex-end; }
+  .cap-casa__filo { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .cap-casa__filo path { fill: none; stroke: var(--rosso); stroke-width: 7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .cap-casa__ordina { position: relative; font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.6rem); min-height: 68px; padding-inline: 1.6em 2em; margin-right: clamp(0px, 8vw, 140px); }
+  .cap-casa__schede { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 2vw, 24px); }
+  .scheda { background: var(--bianco); border-radius: var(--r-trancio); padding: 24px; box-shadow: 0 0 0 2px var(--nero); display: grid; gap: 8px; align-content: start; }
+  .scheda__titolo { font-family: var(--f-display); font-size: 1.7rem; }
+  .scheda p { margin: 0; }
+  .scheda a { font-weight: 800; color: var(--nero); text-decoration-color: var(--rosso); text-decoration-thickness: 3px; }
+  .cap-casa__avvisi { margin-top: clamp(40px, 6vw, 80px); display: grid; justify-items: start; scroll-margin-top: calc(var(--nav-h) + 24px); }
+  @media (max-width: 899px) {
+    .cap-casa__schede { grid-template-columns: 1fr; }
+    .cap-casa__azione { justify-content: center; }
+    .cap-casa__ordina { margin-right: 0; }
+  }
+</style>

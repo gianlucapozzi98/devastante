@@ -1,0 +1,115 @@
+---
+import { ordinaHref } from '../../lib/site';
+import { percorsoPulito } from '../../lib/percorso';
+const path = percorsoPulito(Astro.url.pathname);
+const voci = [
+  { href: '/menu', label: 'Menu' },
+  { href: '/smash', label: 'Smash' },
+  { href: '/la-storia', label: 'La storia' },
+  { href: '/dove-siamo', label: 'Dove siamo' },
+];
+const ordina = ordinaHref();
+---
+<header class="nav" data-nav>
+  <div class="nav__barra">
+    <a class="nav__logo" href="/" aria-label="DEVASTANTE, torna alla home" data-nav-logo>
+      <img src="/brand/devastante-logo.svg" alt="" width="2130" height="675" />
+    </a>
+    <nav class="nav__voci" aria-label="Principale">
+      <ul>
+        {voci.map((v) => (
+          <li><a href={v.href} aria-current={path === v.href ? 'page' : undefined}><span>{v.label}</span></a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="nav__azioni">
+      <button class="suono" type="button" aria-pressed="false" data-suono title="Suono">
+        <span class="sr-only">Suono</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="suono__onde" d="M16 8.5c1.2 1 1.8 2.2 1.8 3.5s-.6 2.5-1.8 3.5M18.6 6c2 1.6 3 3.6 3 6s-1 4.4-3 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="suono__x" d="M16.5 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="suono__stato" aria-hidden="true">off</span>
+      </button>
+      <a class="btn btn--piccolo nav__ordina" href={ordina} data-ordina>Ordina</a>
+      <button class="nav__burger" type="button" aria-expanded="false" aria-controls="menu-mobile" data-burger>
+        <span class="sr-only">Apri il menu</span>
+        <span class="nav__burger-linee" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="nav__pannello" id="menu-mobile" data-pannello hidden>
+    <nav aria-label="Menu mobile">
+      <ul>
+        <li><a href="/">Home</a></li>
+        {voci.map((v) => <li><a href={v.href} aria-current={path === v.href ? 'page' : undefined}>{v.label}</a></li>)}
+      </ul>
+    </nav>
+    <a class="btn" href={ordina}>Ordina</a>
+  </div>
+</header>
+
+<style>
+  .nav { position: fixed; inset: 0 0 auto; z-index: 100; pointer-events: none; }
+  .nav__barra {
+    pointer-events: auto; height: var(--nav-h); display: flex; align-items: center; gap: 24px;
+    padding-inline: var(--gutter); transition: transform var(--t-ui) var(--ease-out), background-color var(--t-ui);
+  }
+  :global(html.nav-scorre) .nav__barra { background: rgb(246 241 231 / 0.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 0 rgb(0 0 0 / 0.08); }
+  :global(html.nav-nascosta) .nav__barra { transform: translateY(-100%); }
+  .nav__logo { display: block; width: 132px; flex: none; transition: opacity var(--t-ui) var(--ease-out), transform var(--t-ui) var(--ease-out); }
+  :global(html.home-in-alto) .nav__logo { opacity: 0; transform: translateY(-6px); pointer-events: none; }
+  .nav__logo img { width: 100%; height: auto; }
+  .nav__voci { margin-left: auto; }
+  .nav__voci ul { display: flex; gap: clamp(14px, 2vw, 30px); list-style: none; margin: 0; padding: 0; }
+  .nav__voci a { position: relative; text-decoration: none; font-weight: 700; font-size: var(--fs-s); padding: 10px 2px; display: inline-block; }
+  .nav__voci a span { display: inline-block; transition: transform var(--t-ui) var(--ease-out); }
+  .nav__voci a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 3px; border-radius: 3px; background: var(--rosso);
+    transform: scaleX(0); transform-origin: right; transition: transform var(--t-ui) var(--ease-out);
+  }
+  .nav__voci a:hover::after, .nav__voci a[aria-current='page']::after { transform: scaleX(1); transform-origin: left; }
+  .nav__voci a:hover span { transform: rotate(-3deg) translateY(-1px); }
+  .nav__azioni { display: flex; align-items: center; gap: 10px; }
+  .suono {
+    display: inline-flex; align-items: center; gap: 4px; min-width: 44px; min-height: 44px; justify-content: center;
+    border: 0; background: transparent; border-radius: 999px; padding: 0 8px; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .suono svg { width: 22px; height: 22px; }
+  .suono .suono__onde { display: none; }
+  .suono[aria-pressed='true'] .suono__onde { display: inline; }
+  .suono[aria-pressed='true'] .suono__x { display: none; }
+  .suono:hover { background: rgb(0 0 0 / 0.06); }
+  .nav__burger { display: none; width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--nero); color: var(--carta); }
+  .nav__burger-linee { display: grid; gap: 6px; justify-items: center; }
+  .nav__burger-linee i { display: block; width: 20px; height: 2.5px; background: currentColor; border-radius: 2px; transition: transform var(--t-ui) var(--ease-out); }
+  .nav__burger[aria-expanded='true'] .nav__burger-linee i:first-child { transform: translateY(4.25px) rotate(45deg); }
+  .nav__burger[aria-expanded='true'] .nav__burger-linee i:last-child { transform: translateY(-4.25px) rotate(-45deg); }
+  .nav__pannello {
+    pointer-events: auto; position: fixed; inset: 0; z-index: -1; background: var(--carta); padding: calc(var(--nav-h) + 24px) var(--gutter) 32px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .nav__pannello[hidden] { display: none; }
+  .nav__pannello ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .nav__pannello a:not(.btn) { font-family: var(--f-display); font-size: clamp(2.6rem, 12vw, 4.5rem); text-decoration: none; line-height: 1.05; display: inline-block; }
+  .nav__pannello a[aria-current='page'] { color: var(--rosso); }
+  .nav__pannello .btn { align-self: flex-start; }
+  @media (max-width: 899px) {
+    .nav__voci { display: none; }
+    .nav__azioni { margin-left: auto; }
+    .nav__burger { display: inline-grid; place-items: center; }
+    .nav__logo { width: 112px; }
+  }
+  @media (max-width: 400px) {
+    .suono__stato { display: none; }
+    .nav__ordina { padding-inline: 1em; }
+  }
+</style>
+<style>
+  /* il logo "ondeggia" al passaggio, come le sue lettere disegnate a mano */
+  .nav__logo:hover img { animation: ondeggia 0.7s var(--ease-out); }
+  @keyframes ondeggia {
+    20% { transform: rotate(-3deg) translateY(-2px); }
+    45% { transform: rotate(2.5deg) translateY(1px); }
+    70% { transform: rotate(-1deg); }
+    100% { transform: none; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+/**
+ * Logo DEVASTANTE inline, con i tracciati originali del PDF (vedi scripts/logo/).
+ * Nessuna modifica di forma o colore: i gruppi servono solo ad animare i pezzi.
+ * Il logo va sempre su fondo chiaro (carta o bianco): le lettere nere e rosse spariscono su nero e su rosso.
+ */
+import parts from '../../data/logo-parts.json';
+
+interface Props {
+  variante?: 'wordmark' | 'monogramma';
+  class?: string;
+  animabile?: boolean;
+  etichetta?: string | null;
+}
+const { variante = 'wordmark', class: cls = '', animabile = false, etichetta = 'DEVASTANTE · Pizza e smash' } = Astro.props;
+const data = variante === 'wordmark' ? parts.wordmark : parts.monogram;
+const by = (prefix: string) => data.parts.filter((p) => p.id.startsWith(prefix));
+const uid = `logo-${variante}-${Math.random().toString(36).slice(2, 7)}`;
+// Linea centrale della pennellata (solo per la maschera "a pennello" del caricamento)
+const ondaStroke = variante === 'wordmark'
+  ? 'M190 330 C 240 250, 300 205, 380 212 S 520 262, 600 262 S 690 232, 710 214'
+  : 'M900 1300 C 960 1180, 1060 1130, 1180 1150 S 1420 1240, 1540 1215 S 1630 1150, 1650 1130';
+const ondaParts = by(variante === 'wordmark' ? 'onda' : 'mono-onda');
+---
+<svg
+  class:list={['logo', `logo--${variante}`, cls]}
+  viewBox={data.viewBox}
+  xmlns="http://www.w3.org/2000/svg"
+  role={etichetta ? 'img' : undefined}
+  aria-label={etichetta ?? undefined}
+  aria-hidden={etichetta ? undefined : 'true'}
+  focusable="false"
+  data-logo={variante}
+>
+  {animabile && (
+    <defs>
+      <mask id={`${uid}-pennello`} maskUnits="userSpaceOnUse">
+        <path class="logo__pennello" d={ondaStroke} fill="none" stroke="#fff" stroke-width={variante === 'wordmark' ? 190 : 260} stroke-linecap="round" />
+      </mask>
+    </defs>
+  )}
+  <g class="logo__onda" mask={animabile ? `url(#${uid}-pennello)` : undefined}>
+    {ondaParts.map((p) => <path data-part={p.id} fill={p.fill} d={p.d} />)}
+  </g>
+  {variante === 'wordmark' ? (
+    <>
+      <g class="logo__deva">{by('deva').map((p) => <path class="logo__lettera" data-part={p.id} fill={p.fill} d={p.d} />)}</g>
+      <g class="logo__stante">{by('stante').map((p) => <path class="logo__lettera" data-part={p.id} fill={p.fill} d={p.d} />)}</g>
+      <g class="logo__tag">
+        {by('linea').map((p) => <path class="logo__linea" data-part={p.id} fill={p.fill} d={p.d} />)}
+        {by('tag').map((p) => <path class="logo__car" data-part={p.id} fill={p.fill} d={p.d} />)}
+      </g>
+    </>
+  ) : (
+    <g class="logo__mono">{by('mono-').filter((p) => p.id !== 'mono-onda').map((p) => <path class="logo__lettera" data-part={p.id} fill={p.fill} d={p.d} />)}</g>
+  )}
+</svg>
+
+<style>
+  .logo { width: 100%; height: auto; overflow: visible; }
+  .logo path { transform-box: fill-box; transform-origin: 50% 100%; }
+</style>
