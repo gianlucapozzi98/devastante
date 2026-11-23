@@ -110,5 +110,5 @@ const testoBollino = prestoInApertura
     .bollino { top: auto; bottom: 18px; right: 14px; width: 92px; }
     .hero__scorri { left: var(--gutter); transform: none; justify-items: start; bottom: 28px; }
   }
-  @media (prefers-reduced-motion: reduce) { .bollino__giro { animation: none; } }
+  :global(html.movimento-ridotto) .bollino__giro { animation: none; }
 </style>

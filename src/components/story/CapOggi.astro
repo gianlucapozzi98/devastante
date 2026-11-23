@@ -66,10 +66,8 @@ const vetrine = [
   .cartello__testo { background: var(--bianco); color: var(--nero); border: 3px solid var(--nero); border-radius: 10px; padding: 0.5em 0.9em; font-family: var(--f-display); font-size: clamp(1rem, 1.6vw, 1.5rem); line-height: 1; text-align: center; box-shadow: 4px 4px 0 var(--rosso); }
   .cap-oggi__nota { font-weight: 700; margin-top: 18px; }
   .cap-oggi__nota a { color: var(--nero); text-decoration-color: var(--rosso); text-decoration-thickness: 3px; }
-  @media (prefers-reduced-motion: reduce) {
-    .cap-oggi[data-presto='1'] .saracinesca { transform: translateY(-55%); }
-    .cap-oggi[data-presto='0'] .saracinesca { transform: translateY(-100%); }
-  }
+  :global(html.movimento-ridotto) .cap-oggi[data-presto='1'] .saracinesca { transform: translateY(-55%); }
+  :global(html.movimento-ridotto) .cap-oggi[data-presto='0'] .saracinesca { transform: translateY(-100%); }
   @media (max-width: 899px) {
     .cap-oggi__pin { grid-template-columns: 1fr; min-height: auto; }
   }

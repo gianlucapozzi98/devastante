@@ -12,6 +12,11 @@ export const EASE = {
 
 export const DUR = { micro: 0.18, ui: 0.45, scene: 0.9, apertura: 1.1 } as const;
 
-export const riduci = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/**
+ * Movimento ridotto: segue l'impostazione del sistema ("Riduci movimento" su Mac, "Effetti di animazione"
+ * su Windows) salvo una scelta esplicita del visitatore (localStorage "dev-movimento": "si" | "no").
+ * La decisione la prende lo script in <head> prima del primo disegno e la scrive come classe sull'<html>.
+ */
+export const riduci = (): boolean => document.documentElement.classList.contains('movimento-ridotto');
 export const desktop = (): boolean => window.matchMedia('(min-width: 900px)').matches;
 export const puntatoreFine = (): boolean => window.matchMedia('(hover: hover) and (pointer: fine)').matches;

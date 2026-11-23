@@ -37,9 +37,7 @@ const TONDA = 'M200 50 C282.8 50 350 117.2 350 200 C350 282.8 282.8 350 200 350 
   .cap-2016__etichette span { display: block; text-align: center; }
   .e-tonda { position: absolute; inset: 0; opacity: 0; }
   :global(html.js-pronto) .cap-2016 .e-tonda { opacity: 0; }
-  @media (prefers-reduced-motion: reduce) {
-    .cap-2016__fantasma { opacity: 0.5; }
-  }
+  :global(html.movimento-ridotto) .cap-2016__fantasma { opacity: 0.5; }
   @media (max-width: 899px) {
     .cap-2016__pin { grid-template-columns: 1fr; min-height: auto; }
     .cap-2016__forma { width: min(78vw, 360px); }

@@ -10,6 +10,7 @@ import { initCursore } from './cursor';
 import { initSuono } from './sound';
 import { initNav } from './nav';
 import { initConsenso } from './consent';
+import { initMovimento } from './movimento';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,6 +91,7 @@ avviaLenis();
 initCursore();
 initSuono();
 initConsenso();
+initMovimento();
 // La pennellata di transizione (MorphSVG) arriva quando il browser è libero: non pesa sul primo caricamento.
 const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
 (ric ?? ((cb: () => void) => setTimeout(cb, 1200)))(() => import('./transitions').then((m) => m.initTransizioni({ getLenis })), { timeout: 2500 });

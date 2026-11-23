@@ -4,6 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import Nav from '../components/ui/Nav.astro';
 import Footer from '../components/ui/Footer.astro';
 import CookieBanner from '../components/ui/CookieBanner.astro';
+import MovimentoAvviso from '../components/ui/MovimentoAvviso.astro';
 import { SITE, impostazioni, azienda } from '../lib/site';
 import { percorsoPulito } from '../lib/percorso';
 
@@ -92,7 +93,13 @@ const restaurant: Record<string, unknown> = {
         var d = document.documentElement;
         d.classList.remove('no-js');
         d.classList.add('js');
-        var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var sistema = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var scelta = null;
+        try { scelta = localStorage.getItem('dev-movimento'); } catch (e) {}
+        var ridotto = scelta === 'no' ? true : scelta === 'si' ? false : sistema;
+        if (ridotto) d.classList.add('movimento-ridotto');
+        if (sistema) d.classList.add('sistema-ridotto');
+        if (scelta === 'si' || scelta === 'no') d.classList.add('movimento-scelto');
         var visto = false;
         try { visto = sessionStorage.getItem('dev-aperto') === '1'; } catch (e) {}
         try {
@@ -116,6 +123,7 @@ const restaurant: Record<string, unknown> = {
     </main>
     <Footer />
     <CookieBanner />
+    <MovimentoAvviso />
 
     <!-- Pennellata di transizione tra le pagine (decorativa) -->
     <div class="transizione" aria-hidden="true" transition:persist="transizione">

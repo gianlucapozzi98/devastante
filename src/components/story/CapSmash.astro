@@ -45,10 +45,8 @@ const { cap } = Astro.props;
   .cap-smash__schizzi path { opacity: 0; }
   .cap-smash__piastra { width: 100%; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3a3836, #6f6d69, #3a3836); }
   .cap-smash__testo .cap__link { color: var(--formaggio); }
-  @media (prefers-reduced-motion: reduce) {
-    .cap-smash__parola { transform: scale(1.12, 0.5); }
-    .cap-smash__spatola { top: auto; bottom: calc(40px + 0.55 * clamp(4.5rem, 13vw, 13rem)); }
-  }
+  :global(html.movimento-ridotto) .cap-smash__parola { transform: scale(1.12, 0.5); }
+  :global(html.movimento-ridotto) .cap-smash__spatola { top: auto; bottom: calc(40px + 0.55 * clamp(4.5rem, 13vw, 13rem)); }
   @media (max-width: 899px) {
     .cap-smash__pin { grid-template-columns: 1fr; min-height: auto; }
     .cap-smash__scena { min-height: 60vh; }

@@ -176,9 +176,11 @@ p { margin: 0 0 1em; }
 /* ---------- linee e taglio ---------- */
 .taglio { display: block; width: 100%; height: 28px; overflow: visible; color: var(--rosso); }
 
-/* ---------- movimento ridotto ---------- */
+/* ---------- movimento ridotto ----------
+   Classe decisa in <head> (sistema o scelta del visitatore). Senza JavaScript vale l'impostazione del sistema. */
+html.movimento-ridotto *, html.movimento-ridotto *::before, html.movimento-ridotto *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  html.no-js *, html.no-js *::before, html.no-js *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
 
 /* ---------- capitoli ---------- */

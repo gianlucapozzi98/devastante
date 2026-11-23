@@ -105,6 +105,7 @@ server { listen 80; server_name dominio.it www.dominio.it; return 301 https://ww
 | Lighthouse mobile (localhost, Chrome headless) | Home: **Performance 100 · Accessibilità 100 · Best practices 100 · SEO 100**, LCP 1,3 s, TBT 20 ms, CLS 0,013. Menu, Smash, La storia, Dove siamo, Allergeni, Privacy, Cookie, Termini, Accessibilità: 100/100/100/100 |
 | Screenshot 1440 e 390 px | `docs/screenshot/animato/` (un fotogramma per capitolo) e `docs/screenshot/ridotto/` (pagine intere) |
 | Movimento ridotto | Niente apertura, niente Lenis, niente scrub: tutti i testi visibili e la storia completa (pagine intere in `docs/screenshot/ridotto/`) |
+| Avviso "Animazioni ridotte" | Se il computer chiede meno movimento (Mac: *Riduci movimento*; Windows: *Effetti di animazione* spenti) la storia resta ferma e compare un avviso con "Mostra le animazioni". Nel footer c'è sempre l'interruttore "Riduci / Mostra le animazioni" |
 | Nessuno scorrimento orizzontale | Verificato a 1440 e 390 su home, menu, smash, la storia, dove siamo, allergeni, privacy e 404 |
 | Tracciamento prima del consenso | Al primo caricamento solo richieste allo stesso dominio, nessun iframe; la mappa si crea solo dopo il consenso "Mappe" |
 | Banner cookie | Accetta / Rifiuta / Personalizza, X = rifiuto, "Preferenze cookie" nel footer, nuova richiesta dopo 6 mesi |

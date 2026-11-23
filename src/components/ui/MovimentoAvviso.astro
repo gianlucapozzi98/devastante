@@ -1,0 +1,34 @@
+---
+/**
+ * Se il sistema chiede movimento ridotto il sito resta fermo (come chiede il brief), ma lo dice
+ * e lascia scegliere: "Mostra le animazioni" salva la scelta (localStorage "dev-movimento") e ricarica.
+ * Compare solo quando l'impostazione arriva dal sistema e il visitatore non ha ancora scelto.
+ */
+---
+<div class="movimento-avviso" role="region" aria-label="Animazioni ridotte" transition:persist="movimento-avviso">
+  <p class="movimento-avviso__testo">
+    <strong>Animazioni ridotte.</strong> Il tuo dispositivo chiede meno movimento, quindi la storia resta ferma.
+  </p>
+  <div class="movimento-avviso__azioni">
+    <button type="button" class="btn btn--piccolo" data-movimento="si">Mostra le animazioni</button>
+    <button type="button" class="btn btn--piccolo btn--linea" data-movimento="no">Lascia così</button>
+  </div>
+</div>
+
+<style is:global>
+  .movimento-avviso { display: none; }
+  html.sistema-ridotto:not(.movimento-scelto) .movimento-avviso {
+    display: grid; gap: 12px; position: fixed; right: 16px; bottom: 16px; z-index: 119; width: min(380px, calc(100vw - 32px));
+    background: var(--bianco); color: var(--nero); border-radius: 18px; padding: 18px 20px;
+    box-shadow: 0 0 0 2px var(--nero), 6px 6px 0 var(--rosso);
+  }
+  .movimento-avviso__testo { margin: 0; font-size: var(--fs-s); }
+  .movimento-avviso__azioni { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 899px) {
+    html.sistema-ridotto:not(.movimento-scelto) .movimento-avviso { top: calc(var(--nav-h) + 8px); bottom: auto; left: 16px; right: 16px; width: auto; }
+  }
+  /* interruttore nel footer: l'etichetta dice cosa succede al clic */
+  .mov-riduci, .mov-mostra { display: none; }
+  html:not(.movimento-ridotto) .mov-riduci { display: inline; }
+  html.movimento-ridotto .mov-mostra { display: inline; }
+</style>
