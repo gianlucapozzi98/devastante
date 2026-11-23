@@ -32,13 +32,13 @@ const album1: Voce[] = fotoCap.length
   </div>
   <div class="cap-tabisca__strisce" aria-label="Album di TABISCA">
     <ul class="striscia" data-striscia="1">
-      {album1.map((f) => (
-        <li><Foto class="striscia__foto" src={f.src} alt={f.alt} nota={f.nota} didascalia={f.didascalia} sfondo="#1d1b19" inchiostro="#f6f1e7" sizes="(min-width: 900px) 30vw, 70vw" /></li>
+      {album1.map((f, i) => (
+        <li><Foto class="striscia__foto" slot={`tabisca-1-${i}`} src={f.src} alt={f.alt} nota={f.nota} didascalia={f.didascalia} sfondo="#1d1b19" inchiostro="#f6f1e7" sizes="(min-width: 900px) 30vw, 70vw" /></li>
       ))}
     </ul>
     <ul class="striscia" data-striscia="-1">
-      {riga2.map((f) => (
-        <li><Foto class="striscia__foto" alt={f.alt} nota={f.nota} sfondo="#1d1b19" inchiostro="#f6f1e7" sizes="(min-width: 900px) 30vw, 70vw" /></li>
+      {riga2.map((f, i) => (
+        <li><Foto class="striscia__foto" slot={`tabisca-2-${i}`} alt={f.alt} nota={f.nota} sfondo="#1d1b19" inchiostro="#f6f1e7" sizes="(min-width: 900px) 30vw, 70vw" /></li>
       ))}
     </ul>
   </div>

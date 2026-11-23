@@ -46,7 +46,7 @@ const scatti: Record<string, string[]> = {
           {t.ancora !== 'cap-ricordo' && <blockquote class="pannello__citazione"><p><span class="da-confermare">[Citazione del titolare, da raccogliere con il suo permesso]</span></p></blockquote>}
         </div>
         <div class="pannello__foto">
-          {(scatti[t.ancora] ?? []).map((n) => <Foto class="pannello__f" alt={n} nota={n} sizes="(min-width: 900px) 25vw, 50vw" />)}
+          {(scatti[t.ancora] ?? []).map((n, i) => <Foto class="pannello__f" slot={`storia-${t.ancora}-${i}`} alt={n} nota={n} sizes="(min-width: 900px) 25vw, 50vw" />)}
         </div>
       </div>
     ))}
@@ -54,7 +54,7 @@ const scatti: Record<string, string[]> = {
 
   <section class="contenitore film" data-anim="rivela" aria-labelledby="film-t">
     <h2 id="film-t" class="display film__titolo" data-rivela>Il film della storia</h2>
-    <Foto class="film__video" alt="Il film della storia di DEVASTANTE" nota="film di 60–90 secondi montato con foto vere della famiglia e del locale (in arrivo)" sizes="100vw" />
+    <Foto class="film__video" slot="storia-film" alt="Il film della storia di DEVASTANTE" nota="film di 60–90 secondi montato con foto vere della famiglia e del locale (in arrivo)" sizes="100vw" />
     <p class="film__nota" data-rivela>Il film verrà montato solo con foto e video veri, forniti dalla famiglia.</p>
   </section>
 

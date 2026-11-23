@@ -113,6 +113,47 @@ const restaurant: Record<string, unknown> = {
         }
       })();
     </script>
+    <!-- Diagnosi: raccoglie gli errori fin dall'inizio; con ?diagnosi nell'indirizzo mostra un riquadro da fotografare.
+         Scritto in JavaScript "vecchio" apposta: funziona anche dove gli script del sito non partono. -->
+    <script is:inline>
+      (function () {
+        var errori = [];
+        window.__errori = errori;
+        window.addEventListener('error', function (e) {
+          var f = e.filename ? ' @ ' + String(e.filename).split('/').pop() + ':' + e.lineno : '';
+          errori.push((e.message || (e.target && e.target.src ? 'file non caricato ' + e.target.src : 'errore')) + f);
+        }, true);
+        window.addEventListener('unhandledrejection', function (e) { errori.push('promise: ' + ((e.reason && e.reason.message) || e.reason)); });
+        if (location.search.indexOf('diagnosi') === -1) return;
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            var d = document.documentElement;
+            var scelta = 'nessuna';
+            try { scelta = localStorage.getItem('dev-movimento') || 'nessuna'; } catch (e) { scelta = 'non leggibile'; }
+            var righe = [
+              ['Browser', navigator.userAgent],
+              ['Finestra', window.innerWidth + ' x ' + window.innerHeight + ' (densita ' + window.devicePixelRatio + ')'],
+              ['Il sistema chiede meno movimento', window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'SI' : 'no'],
+              ['Scelta animazioni salvata', scelta],
+              ['Animazioni attive', d.className.indexOf('movimento-ridotto') > -1 ? 'NO (ridotte)' : 'si'],
+              ['Script principale partito', d.className.indexOf('js-pronto') > -1 ? 'si' : 'NO'],
+              ['Scroll fluido', d.className.indexOf('lenis') > -1 ? 'si' : 'no'],
+              ['Scene fissate', document.querySelectorAll('.pin-spacer').length],
+              ['Pennellata WebGL', d.className.indexOf('gl-attivo') > -1 ? 'si' : 'no'],
+              ['Errori', errori.length ? errori.join(' | ') : 'nessuno']
+            ];
+            var box = document.createElement('div');
+            box.setAttribute('role', 'dialog');
+            box.setAttribute('aria-label', 'Diagnosi');
+            box.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;background:#fff;color:#000;border:3px solid #000;border-radius:12px;padding:14px 16px;font:14px/1.45 system-ui,sans-serif;max-height:70vh;overflow:auto;box-shadow:6px 6px 0 #E30613';
+            var h = '<strong style="font-size:16px">Diagnosi DEVASTANTE</strong> - fai uno screenshot di questo riquadro<br>';
+            for (var i = 0; i < righe.length; i++) h += '<div><b>' + righe[i][0] + ':</b> ' + String(righe[i][1]).replace(/</g, '&lt;') + '</div>';
+            box.innerHTML = h;
+            document.body.appendChild(box);
+          }, 3000);
+        });
+      })();
+    </script>
     <ClientRouter fallback="swap" />
   </head>
   <body>

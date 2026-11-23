@@ -18,7 +18,7 @@ import { smash, ordinaHref } from '../lib/site';
       <ol class="anatomia__pila">
         {smash.strati.map((s, i) => (
           <li class="strato" style={`--i:${i}`}>
-            <Foto class="strato__foto" src={s.foto} alt={s.nome} nota={`foto vera: ${s.nome.toLowerCase()}`} sizes="(min-width: 900px) 34vw, 80vw" />
+            <Foto class="strato__foto" slot={`smash-${i}`} src={s.foto} alt={s.nome} nota={`foto vera: ${s.nome.toLowerCase()}`} sizes="(min-width: 900px) 34vw, 40vw" />
             <div class="strato__etichetta">
               <span class="strato__num">{String(i + 1).padStart(2, '0')}</span>
               <h3 class="display">{s.nome} {!s.confermato && <span class="da-confermare">[da confermare]</span>}</h3>
@@ -87,6 +87,8 @@ import { smash, ordinaHref } from '../lib/site';
   @media (max-width: 899px) {
     .anatomia__in, .gesto__in { grid-template-columns: 1fr; }
     .anatomia__testa { position: static; }
-    .strato { grid-template-columns: 1fr; }
+    .strato { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 14px; }
+    .strato :global(.strato__foto) { aspect-ratio: 4 / 3; border-radius: 999px / 70%; }
+    .strato__etichetta h3 { font-size: 1.35rem; }
   }
 </style>

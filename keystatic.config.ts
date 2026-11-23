@@ -54,6 +54,11 @@ export default config({
           description: 'Attiva finché il locale non è aperto davvero. Il sito non dirà mai "aperto" con questa opzione attiva.',
           defaultValue: true,
         }),
+        fotoProva: fields.checkbox({
+          label: 'Foto di prova',
+          description: "Riempie gli spazi senza foto vere con foto d'archivio per vedere l'effetto. Non sono foto del locale: da spegnere prima di far vedere il sito al pubblico.",
+          defaultValue: false,
+        }),
         dataApertura: fields.date({ label: 'Data di apertura (solo se confermata)' }),
         indirizzo: fields.text({ label: 'Via e numero civico' }),
         cap: fields.text({ label: 'CAP' }),

@@ -82,6 +82,8 @@ Microinterazioni con le stesse curve e durate (`--ease-out`, `--ease-io`, 0,18 /
 
 - In sviluppo funziona in **locale** (salva i file nel progetto).
 - In produzione usa la **modalità GitHub**: creare il repository, impostare `PUBLIC_KEYSTATIC_GITHUB_REPO=proprietario/repo` e seguire la procedura di Keystatic per la GitHub App (`KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`). Vedi `.env.example`.
+- **Interruttore "Foto di prova"** (Impostazioni): acceso ora, riempie gli spazi senza foto vere con foto d'archivio (elenco interno in `IMMAGINI.md`). **Va spento prima di far vedere il sito al pubblico**: non sono foto del locale.
+- **Diagnosi**: aprendo il sito con `?diagnosi` in fondo all'indirizzo (es. `https://devastante.vercel.app/?diagnosi`) compare un riquadro con browser, impostazione del movimento, stato degli script ed eventuali errori, da fotografare se qualcosa non va su un computer.
 - **Flag "Presto in apertura"** (Impostazioni): attivo di default. Con il flag attivo il sito non dice mai "aperto": bollino nell'hero, saracinesca a metà con cartello, "Presto in apertura" nel footer e nelle FAQ, modulo avvisi visibile. Disattivarlo **solo** all'apertura reale.
 - Quando il telefono è inserito e il flag è spento, "Ordina" diventa un link `tel:`; finché no, porta a "Come ordinare".
 

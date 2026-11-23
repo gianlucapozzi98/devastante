@@ -8,6 +8,7 @@ const s = z.string().default('');
 export const impostazioni = z
   .object({
     prestoInApertura: z.boolean().default(true),
+    fotoProva: z.boolean().default(false),
     dataApertura: z.string().nullable().default(null),
     indirizzo: s, cap: s, citta: s, telefono: s, whatsapp: s, email: s,
     mappaUrl: z.string().nullable().default(null),

@@ -36,6 +36,8 @@ export default defineConfig({
   image: { responsiveStyles: false },
   devToolbar: { enabled: false },
   vite: {
+    // compatibilità anche con browser di qualche anno fa (Mac non aggiornati): sintassi abbassata a ES2020
     build: { assetsInlineLimit: 2048 },
+    environments: { client: { build: { target: ['chrome87', 'edge88', 'firefox78', 'safari14'] } } },
   },
 });

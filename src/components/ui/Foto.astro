@@ -4,7 +4,7 @@
  * Senza foto: segnaposto DICHIARATO ("Foto in arrivo" + lo scatto da fare). Mai cibo finto, mai stock per i prodotti.
  */
 import { Picture } from 'astro:assets';
-import { trovaFoto } from '../../lib/foto';
+import { trovaFoto, fotoProva } from '../../lib/foto';
 
 interface Props {
   src?: string | null;
@@ -17,18 +17,24 @@ interface Props {
   sfondo?: string;
   inchiostro?: string;
   didascalia?: string;
+  /** Chiave dello spazio: con "Foto di prova" acceso mostra una foto d'archivio finché non c'è quella vera. */
+  slot?: string;
 }
-const { src, alt, nota, class: cls = '', sizes = '(min-width: 900px) 50vw, 100vw', priorita = false, illustrativa = false, sfondo, inchiostro, didascalia } = Astro.props;
-const img = trovaFoto(src);
+const { src, alt: altVero, nota, class: cls = '', sizes = '(min-width: 900px) 50vw, 100vw', priorita = false, illustrativa = false, sfondo, inchiostro, didascalia, slot } = Astro.props;
+const vera = trovaFoto(src);
+const prova = vera ? null : fotoProva(slot);
+const img = vera ?? prova?.img ?? null;
+// il testo alternativo descrive la foto davvero mostrata
+const alt = vera ? altVero : prova?.alt ?? altVero;
 const stile = [sfondo && `--sfondo:${sfondo}`, inchiostro && `--inchiostro:${inchiostro}`].filter(Boolean).join(';');
 ---
 {img ? (
-  <figure class:list={['foto', cls]} style={stile || undefined}>
+  <figure class:list={['foto', cls]} style={stile || undefined} data-prova={prova ? '' : undefined}>
     <Picture
       src={img}
       alt={alt}
       formats={['avif', 'webp']}
-      widths={[480, 800, 1200, 1600].filter((w) => w <= img.width)}
+      widths={[360, 640, 960, 1440].filter((w) => w <= img.width)}
       sizes={sizes}
       loading={priorita ? 'eager' : 'lazy'}
       fetchpriority={priorita ? 'high' : 'auto'}
@@ -38,7 +44,7 @@ const stile = [sfondo && `--sfondo:${sfondo}`, inchiostro && `--inchiostro:${inc
     {didascalia && <figcaption class="foto__didascalia">{didascalia}</figcaption>}
   </figure>
 ) : (
-  <div class:list={['foto', 'foto--vuota', cls]} style={stile || undefined} role="img" aria-label={`Foto in arrivo: ${alt}`}>
+  <div class:list={['foto', 'foto--vuota', cls]} style={stile || undefined} role="img" aria-label={`Foto in arrivo: ${altVero}`}>
     <span class="foto__nota">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.2h6.8L17 8h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.2" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
       <span>Foto in arrivo · {nota}</span>

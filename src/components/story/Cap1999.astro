@@ -16,12 +16,12 @@ const { cap } = Astro.props;
               <span class="trancio__anno display">{cap.etichetta}</span>
               <span class="trancio__luogo">Cesano Boscone</span>
             </div>
-            <Foto class="trancio" nota="la teglia appena sfornata, dall'alto" alt="Una teglia di pizza appena sfornata" />
+            <Foto class="trancio" slot="cap1999-teglia" nota="la teglia appena sfornata, dall'alto" alt="Una teglia di pizza appena sfornata" />
             <div class="trancio trancio--parola trancio--nero"><span class="display">passione</span></div>
-            <Foto class="trancio" nota="foto d'epoca di TABISCA, solo se la dà la famiglia" alt="TABISCA negli anni del trancio" sfondo="#e4dccb" />
-            <Foto class="trancio" nota="il taglio con la rotella, macro" alt="La rotella che taglia un trancio" sfondo="#e4dccb" />
+            <Foto class="trancio" slot="cap1999-epoca" nota="foto d'epoca di TABISCA, solo se la dà la famiglia" alt="TABISCA negli anni del trancio" sfondo="#e4dccb" />
+            <Foto class="trancio" slot="cap1999-rotella" nota="il taglio con la rotella, macro" alt="La rotella che taglia un trancio" sfondo="#e4dccb" />
             <div class="trancio trancio--parola trancio--carta"><span class="display">mani</span></div>
-            <Foto class="trancio" nota="il bordo croccante di un trancio, macro" alt="Il bordo di un trancio" />
+            <Foto class="trancio" slot="cap1999-bordo" nota="il bordo croccante di un trancio, macro" alt="Il bordo di un trancio" />
             <div class="trancio trancio--parola trancio--rosso"><span class="display">cuore</span></div>
           </div>
           <svg class="teglia__tagli" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">

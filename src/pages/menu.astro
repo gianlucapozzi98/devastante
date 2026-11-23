@@ -42,7 +42,7 @@ const forme = ['14px 22px 12px 26px', '24px 12px 20px 14px', '12px 18px 26px 16p
         {voci.map((v, i) => (
           <li class="trancio-menu" data-cat={v.categoria} style={`--forma:${forme[i % forme.length]}`}>
             <button type="button" class="trancio-menu__btn" aria-haspopup="dialog" aria-controls={`scheda-${v.id}`} data-apri={`scheda-${v.id}`}>
-              <Foto class="trancio-menu__foto" src={v.foto} alt={v.nome} nota={v.categoria === 'smash' ? 'foto dello smash, macro' : v.categoria === 'pizze' ? 'foto del trancio, dall\'alto' : 'foto della bevanda'} sizes="(min-width: 900px) 25vw, 50vw" />
+              <Foto class="trancio-menu__foto" slot={`menu-${v.id}`} src={v.foto} alt={v.nome} nota={v.categoria === 'smash' ? 'foto dello smash, macro' : v.categoria === 'pizze' ? 'foto del trancio, dall\'alto' : 'foto della bevanda'} sizes="(min-width: 900px) 25vw, 50vw" />
               <span class="trancio-menu__cat">{nomeCat[v.categoria]}</span>
               <span class="trancio-menu__nome display">{v.nome}</span>
               <span class="trancio-menu__prezzo">{v.confermato && v.prezzo ? `€ ${v.prezzo}${unita[v.unita] ? ' ' + unita[v.unita] : ''}` : <DaConfermare>prezzo</DaConfermare>}</span>
@@ -62,7 +62,7 @@ const forme = ['14px 22px 12px 26px', '24px 12px 20px 14px', '12px 18px 26px 16p
         <button type="button" class="scheda-prodotto__chiudi" data-chiudi aria-label="Chiudi la scheda">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" /></svg>
         </button>
-        <Foto class="scheda-prodotto__foto" src={v.foto} alt={v.nome} nota="foto vera del prodotto" sizes="(min-width: 900px) 40vw, 100vw" />
+        <Foto class="scheda-prodotto__foto" slot={`menu-${v.id}`} src={v.foto} alt={v.nome} nota="foto vera del prodotto" sizes="(min-width: 900px) 40vw, 100vw" />
         <p class="occhiello">{nomeCat[v.categoria]}</p>
         <h2 id={`scheda-${v.id}-t`} class="display scheda-prodotto__nome">{v.nome}</h2>
         <p>{v.descrizione}</p>
